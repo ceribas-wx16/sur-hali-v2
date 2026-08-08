@@ -1,94 +1,201 @@
-console.clear();
+<!DOCTYPE html>
+<html lang="tr">
 
-console.log("Admin Login Başlatılıyor...");
+<head>
 
-document.addEventListener("DOMContentLoaded", () => {
+    <meta charset="UTF-8">
 
-    const form =
-        document.getElementById("loginForm");
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    if (form) {
+    <title>Sur Halı | Yönetim Paneli</title>
 
-        form.addEventListener(
-            "submit",
-            girisYap
-        );
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
 
-    }
+</head>
 
-});
+<body>
+
+    <!-- =====================================================
+         ADMIN PANEL
+    ====================================================== -->
+
+    <div class="admin-container">
 
 
-async function girisYap(e) {
+        <!-- =================================================
+             SOL MENÜ
+        ================================================== -->
 
-    e.preventDefault();
+        <aside class="sidebar">
 
-    const email =
-        document
-            .getElementById("email")
-            .value
-            .trim();
+            <div class="sidebar-header">
 
-    const password =
-        document
-            .getElementById("password")
-            .value;
+                <h1>Sur Halı</h1>
 
-    const mesaj =
-        document.getElementById("loginMessage");
+                <p>Yönetim Paneli</p>
 
-    mesaj.textContent = "";
+            </div>
 
-    try {
 
-        console.log("Supabase giriş deneniyor...");
+            <nav class="sidebar-menu">
 
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
+                <button
+                    class="menu-item active"
+                    data-page="dashboardPage"
+                    type="button"
+                >
+                    Dashboard
+                </button>
 
-                email: email,
+                <button
+                    class="menu-item"
+                    data-page="productsPage"
+                    type="button"
+                >
+                    Ürünler
+                </button>
 
-                password: password
+                <button
+                    class="menu-item"
+                    data-page="imagesPage"
+                    type="button"
+                >
+                    Resimler
+                </button>
 
-            });
+                <button
+                    class="menu-item"
+                    data-page="settingsPage"
+                    type="button"
+                >
+                    Site Ayarları
+                </button>
 
-        console.log("Supabase cevap:", data, error);
+                <button
+                    class="menu-item"
+                    id="logoutButton"
+                    type="button"
+                >
+                    Çıkış Yap
+                </button>
 
-        if (error) {
+            </nav>
 
-            console.error(
-                "SUPABASE GİRİŞ HATASI:",
-                error
-            );
+        </aside>
 
-            mesaj.textContent =
-                error.message;
 
-            return;
+        <!-- =================================================
+             ANA İÇERİK
+        ================================================== -->
 
-        }
+        <main class="main-content">
 
-        console.log(
-            "Giriş başarılı:",
-            data.user
-        );
 
-        window.location.href =
-            "admin.html";
+            <!-- =============================================
+                 DASHBOARD
+            ============================================== -->
 
-    }
+            <section
+                class="page active-page"
+                id="dashboardPage"
+            >
 
-    catch (err) {
+                <h2>Dashboard</h2>
 
-        console.error(
-            "BEKLENMEYEN HATA:",
-            err
-        );
+                <p>
+                    Sur Halı yönetim paneline hoş geldiniz.
+                </p>
 
-        mesaj.textContent =
-            err.message ||
-            "Beklenmeyen bir hata oluştu.";
+            </section>
 
-    }
 
-}
+            <!-- =============================================
+                 ÜRÜNLER
+            ============================================== -->
+
+            <section
+                class="page"
+                id="productsPage"
+            >
+
+                <h2>Ürünler</h2>
+
+                <p>
+                    Ürün yönetimi burada olacak.
+                </p>
+
+            </section>
+
+
+            <!-- =============================================
+                 RESİMLER
+            ============================================== -->
+
+            <section
+                class="page"
+                id="imagesPage"
+            >
+
+                <h2>Resimler</h2>
+
+                <p>
+                    Resim yönetimi burada olacak.
+                </p>
+
+            </section>
+
+
+            <!-- =============================================
+                 SİTE AYARLARI
+            ============================================== -->
+
+            <section
+                class="page"
+                id="settingsPage"
+            >
+
+                <h2>Site Ayarları</h2>
+
+                <p>
+                    Site ayarları burada olacak.
+                </p>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUPABASE
+    ====================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <!-- =====================================================
+         SUPABASE BAĞLANTISI
+    ====================================================== -->
+
+    <script src="../js/supabase.js"></script>
+
+
+    <!-- =====================================================
+         ADMIN JAVASCRIPT
+    ====================================================== -->
+
+    <script src="admin.js"></script>
+
+</body>
+
+</html>
