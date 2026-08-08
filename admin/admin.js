@@ -1,16 +1,6 @@
-/* ==========================================================
-   SUR HALI
-   ADMIN LOGIN
-========================================================== */
-
 console.clear();
 
 console.log("Admin Login Başlatılıyor...");
-
-
-/* ==========================================================
-   SAYFA YÜKLENDİ
-========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -28,10 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-
-/* ==========================================================
-   GİRİŞ
-========================================================== */
 
 async function girisYap(e) {
 
@@ -56,10 +42,9 @@ async function girisYap(e) {
     try {
 
         console.log("Supabase giriş deneniyor...");
-        console.log("E-posta:", email);
 
         const { data, error } =
-            await supabase.auth.signInWithPassword({
+            await supabaseClient.auth.signInWithPassword({
 
                 email: email,
 
@@ -69,7 +54,6 @@ async function girisYap(e) {
 
         console.log("Supabase cevap:", data, error);
 
-
         if (error) {
 
             console.error(
@@ -78,19 +62,16 @@ async function girisYap(e) {
             );
 
             mesaj.textContent =
-                error.message ||
-                "Giriş yapılamadı.";
+                error.message;
 
             return;
 
         }
 
-
         console.log(
             "Giriş başarılı:",
             data.user
         );
-
 
         window.location.href =
             "admin.html";
