@@ -21,24 +21,25 @@
 
 <body>
 
-    <!-- =====================================================
-         ADMIN PANEL
-    ====================================================== -->
-
     <div class="admin-container">
 
-
-        <!-- =================================================
+        <!-- ==========================================
              SOL MENÜ
-        ================================================== -->
+        =========================================== -->
 
         <aside class="sidebar">
 
             <div class="sidebar-header">
 
-                <h1>Sur Halı</h1>
+                <img
+                    src="../assets/images/logo.jpg"
+                    alt="Sur Halı"
+                    class="admin-logo"
+                >
 
-                <p>Yönetim Paneli</p>
+                <div class="panel-title">
+                    YÖNETİM PANELİ
+                </div>
 
             </div>
 
@@ -50,149 +51,377 @@
                     data-page="dashboardPage"
                     type="button"
                 >
+                    <span>▣</span>
                     Dashboard
                 </button>
+
 
                 <button
                     class="menu-item"
                     data-page="productsPage"
                     type="button"
                 >
+                    <span>▤</span>
                     Ürünler
                 </button>
+
 
                 <button
                     class="menu-item"
                     data-page="imagesPage"
                     type="button"
                 >
+                    <span>▧</span>
                     Resimler
                 </button>
+
 
                 <button
                     class="menu-item"
                     data-page="settingsPage"
                     type="button"
                 >
+                    <span>⚙</span>
                     Site Ayarları
-                </button>
-
-                <button
-                    class="menu-item"
-                    id="logoutButton"
-                    type="button"
-                >
-                    Çıkış Yap
                 </button>
 
             </nav>
 
+
+            <div class="sidebar-bottom">
+
+                <button
+                    class="menu-item logout-button"
+                    id="logoutButton"
+                    type="button"
+                >
+                    <span>↪</span>
+                    Çıkış Yap
+                </button>
+
+            </div>
+
         </aside>
 
 
-        <!-- =================================================
+        <!-- ==========================================
              ANA İÇERİK
-        ================================================== -->
+        =========================================== -->
 
         <main class="main-content">
 
 
-            <!-- =============================================
+            <!-- ======================================
                  DASHBOARD
-            ============================================== -->
+            ======================================= -->
 
             <section
                 class="page active-page"
                 id="dashboardPage"
             >
 
-                <h2>Dashboard</h2>
+                <div class="page-header">
 
-                <p>
-                    Sur Halı yönetim paneline hoş geldiniz.
-                </p>
+                    <div>
+
+                        <h1>Dashboard</h1>
+
+                        <p>
+                            Sur Halı yönetim paneline hoş geldiniz.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- İSTATİSTİK KARTLARI -->
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ▤
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Toplam Ürün
+                            </span>
+
+                            <strong id="totalProducts">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Aktif Ürün
+                            </span>
+
+                            <strong id="activeProducts">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ▧
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Toplam Resim
+                            </span>
+
+                            <strong id="totalImages">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ◈
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Storage Kullanımı
+                            </span>
+
+                            <strong id="storageUsage">
+                                0 MB
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DASHBOARD ALT ALAN -->
+
+                <div class="dashboard-box">
+
+                    <h2>Hızlı İşlemler</h2>
+
+                    <div class="quick-actions">
+
+                        <button
+                            type="button"
+                            class="gold-button"
+                            data-page="productsPage"
+                        >
+                            Ürün Yönetimi
+                        </button>
+
+                        <button
+                            type="button"
+                            class="outline-button"
+                            data-page="imagesPage"
+                        >
+                            Resim Yönetimi
+                        </button>
+
+                    </div>
+
+                </div>
 
             </section>
 
 
-            <!-- =============================================
+            <!-- ======================================
                  ÜRÜNLER
-            ============================================== -->
+            ======================================= -->
 
             <section
                 class="page"
                 id="productsPage"
             >
 
-                <h2>Ürünler</h2>
+                <div class="page-header">
 
-                <p>
-                    Ürün yönetimi burada olacak.
-                </p>
+                    <div>
+
+                        <h1>Ürünler</h1>
+
+                        <p>
+                            Ürünlerinizi buradan yönetin.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="gold-button"
+                        id="newProductButton"
+                    >
+                        + Yeni Ürün
+                    </button>
+
+                </div>
+
+
+                <div class="content-box">
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            ▤
+                        </div>
+
+                        <h2>
+                            Ürün Yönetimi
+                        </h2>
+
+                        <p>
+                            Ürün sistemi bir sonraki aşamada
+                            aktif edilecek.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </section>
 
 
-            <!-- =============================================
+            <!-- ======================================
                  RESİMLER
-            ============================================== -->
+            ======================================= -->
 
             <section
                 class="page"
                 id="imagesPage"
             >
 
-                <h2>Resimler</h2>
+                <div class="page-header">
 
-                <p>
-                    Resim yönetimi burada olacak.
-                </p>
+                    <div>
+
+                        <h1>Resimler</h1>
+
+                        <p>
+                            Site resimlerini buradan yönetin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="content-box">
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            ▧
+                        </div>
+
+                        <h2>
+                            Resim Yönetimi
+                        </h2>
+
+                        <p>
+                            Resim yükleme ve silme sistemi
+                            bir sonraki aşamada aktif edilecek.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </section>
 
 
-            <!-- =============================================
+            <!-- ======================================
                  SİTE AYARLARI
-            ============================================== -->
+            ======================================= -->
 
             <section
                 class="page"
                 id="settingsPage"
             >
 
-                <h2>Site Ayarları</h2>
+                <div class="page-header">
 
-                <p>
-                    Site ayarları burada olacak.
-                </p>
+                    <div>
+
+                        <h1>Site Ayarları</h1>
+
+                        <p>
+                            Web sitenizin temel bilgilerini yönetin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="content-box">
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            ⚙
+                        </div>
+
+                        <h2>
+                            Site Ayarları
+                        </h2>
+
+                        <p>
+                            Ayarlar bir sonraki aşamada
+                            aktif edilecek.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </section>
-
 
         </main>
 
     </div>
 
 
-    <!-- =====================================================
+    <!-- ==========================================
          SUPABASE
-    ====================================================== -->
+    =========================================== -->
 
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
     ></script>
 
-
-    <!-- =====================================================
-         SUPABASE BAĞLANTISI
-    ====================================================== -->
-
     <script src="../js/supabase.js"></script>
-
-
-    <!-- =====================================================
-         ADMIN JAVASCRIPT
-    ====================================================== -->
 
     <script src="admin.js"></script>
 
