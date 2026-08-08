@@ -1,355 +1,305 @@
-/* ==========================================================
-SUR HALI - ADMIN.JS
-========================================================== */
-
 console.clear();
 
 console.log("Sur Halı Admin başlatılıyor...");
 
+
 document.addEventListener("DOMContentLoaded", function () {
 
-```
-console.log("DOM hazır.");
+    console.log("DOM hazır.");
 
+    const loginForm =
+        document.getElementById("loginForm");
 
-/* ======================================================
-   GİRİŞ SAYFASI
-====================================================== */
+    if (loginForm) {
 
-const loginForm =
-    document.getElementById("loginForm");
+        console.log("Giriş formu bulundu.");
 
+        loginForm.addEventListener(
+            "submit",
+            girisYap
+        );
 
-if (loginForm) {
+        return;
+    }
 
-    console.log(
-        "Giriş formu bulundu."
-    );
+    const adminContainer =
+        document.querySelector(".admin-container");
 
+    if (adminContainer) {
 
-    loginForm.addEventListener(
-        "submit",
-        girisYap
-    );
+        console.log("Admin paneli bulundu.");
 
+        adminPanelBaslat();
 
-    return;
-}
-
-
-/* ======================================================
-   ADMİN PANELİ
-====================================================== */
-
-const adminContainer =
-    document.querySelector(
-        ".admin-container"
-    );
-
-
-if (adminContainer) {
-
-    console.log(
-        "Admin paneli bulundu."
-    );
-
-    adminPanelBaslat();
-
-}
-```
+    }
 
 });
 
+
 /* ==========================================================
-GİRİŞ
+   GİRİŞ
 ========================================================== */
 
 async function girisYap(e) {
 
-```
-e.preventDefault();
+    e.preventDefault();
+
+    console.log("Giriş butonuna basıldı.");
+
+    const email =
+        document
+            .getElementById("email")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("password")
+            .value;
+
+    const mesaj =
+        document.getElementById(
+            "loginMessage"
+        );
+
+    mesaj.textContent = "";
 
 
-console.log(
-    "Giriş butonuna basıldı."
-);
-
-
-const emailInput =
-    document.getElementById(
-        "email"
-    );
-
-
-const passwordInput =
-    document.getElementById(
-        "password"
-    );
-
-
-const mesaj =
-    document.getElementById(
-        "loginMessage"
-    );
-
-
-const email =
-    emailInput.value.trim();
-
-
-const password =
-    passwordInput.value;
-
-
-mesaj.textContent = "";
-
-
-console.log(
-    "E-posta:",
-    email
-);
-
-
-/* SUPABASE */
-
-if (
-    typeof supabase ===
-    "undefined"
-) {
-
-    console.error(
-        "supabase bulunamadı."
-    );
-
-    mesaj.textContent =
-        "Supabase bağlantısı bulunamadı.";
-
-    return;
-}
-
-
-try {
-
-    console.log(
-        "Supabase giriş deneniyor..."
-    );
-
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth
-            .signInWithPassword({
-
-                email: email,
-
-                password: password
-
-            });
-
-
-    console.log(
-        "Supabase cevabı:",
-        data,
-        error
-    );
-
-
-    if (error) {
+    if (
+        typeof supabaseClient ===
+        "undefined"
+    ) {
 
         console.error(
-            "Giriş hatası:",
+            "supabaseClient bulunamadı."
+        );
+
+        mesaj.textContent =
+            "Supabase bağlantısı kurulamadı.";
+
+        return;
+    }
+
+
+    try {
+
+        console.log(
+            "Supabase giriş deneniyor..."
+        );
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
+        console.log(
+            "Supabase cevabı:",
+            data,
             error
         );
 
 
-        mesaj.textContent =
-            error.message;
+        if (error) {
 
+            console.error(
+                "Giriş hatası:",
+                error
+            );
+
+            mesaj.textContent =
+                error.message;
+
+            return;
+        }
+
+
+        console.log(
+            "Giriş başarılı:",
+            data.user
+        );
+
+
+        window.location.href =
+            "admin.html";
+
+    }
+
+    catch (err) {
+
+        console.error(
+            "Beklenmeyen hata:",
+            err
+        );
+
+        mesaj.textContent =
+            err.message ||
+            "Beklenmeyen bir hata oluştu.";
+
+    }
+
+}
+
+
+/* ==========================================================
+   ADMİN PANELİ
+========================================================== */
+
+async function adminPanelBaslat() {
+
+    console.log(
+        "Admin panel başlatılıyor..."
+    );
+
+
+    if (
+        typeof supabaseClient ===
+        "undefined"
+    ) {
+
+        console.error(
+            "supabaseClient bulunamadı."
+        );
+
+        return;
+    }
+
+
+    const {
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (!session) {
+
+        console.warn(
+            "Aktif oturum bulunamadı."
+        );
+
+        window.location.href =
+            "admin-login.html";
 
         return;
     }
 
 
     console.log(
-        "Giriş başarılı."
+        "Aktif kullanıcı:",
+        session.user.email
     );
 
 
-    window.location.href =
-        "admin.html";
+    /* ======================================================
+       MENÜLER
+    ====================================================== */
 
-}
-
-catch (error) {
-
-    console.error(
-        "Beklenmeyen hata:",
-        error
-    );
+    const menuItems =
+        document.querySelectorAll(
+            ".menu-item[data-page]"
+        );
 
 
-    mesaj.textContent =
-        error.message ||
-        "Beklenmeyen bir hata oluştu.";
-
-}
-```
-
-}
-
-/* ==========================================================
-ADMİN PANELİ
-========================================================== */
-
-async function adminPanelBaslat() {
-
-```
-console.log(
-    "Admin panel başlatılıyor..."
-);
+    const pages =
+        document.querySelectorAll(
+            ".page"
+        );
 
 
-if (
-    typeof supabase ===
-    "undefined"
-) {
+    menuItems.forEach(function (item) {
 
-    console.error(
-        "supabase bulunamadı."
-    );
+        item.addEventListener(
+            "click",
+            function () {
 
-    return;
-}
+                const pageId =
+                    item.dataset.page;
 
 
-const {
-    data: {
-        session
-    }
-} =
-    await supabase.auth
-        .getSession();
+                pages.forEach(
+                    function (page) {
+
+                        page.classList.remove(
+                            "active-page"
+                        );
+
+                    }
+                );
 
 
-if (!session) {
-
-    console.warn(
-        "Aktif oturum yok."
-    );
-
-
-    window.location.href =
-        "admin-login.html";
+                const targetPage =
+                    document.getElementById(
+                        pageId
+                    );
 
 
-    return;
-}
+                if (targetPage) {
 
-
-console.log(
-    "Admin oturumu aktif:",
-    session.user.email
-);
-
-
-/* MENÜ */
-
-const menuItems =
-    document.querySelectorAll(
-        ".menu-item[data-page]"
-    );
-
-
-const pages =
-    document.querySelectorAll(
-        ".page"
-    );
-
-
-menuItems.forEach(function (item) {
-
-    item.addEventListener(
-        "click",
-        function () {
-
-            const pageId =
-                item.dataset.page;
-
-
-            pages.forEach(
-                function (page) {
-
-                    page.classList.remove(
+                    targetPage.classList.add(
                         "active-page"
                     );
 
                 }
-            );
 
 
-            const target =
-                document.getElementById(
-                    pageId
+                menuItems.forEach(
+                    function (menu) {
+
+                        menu.classList.remove(
+                            "active"
+                        );
+
+                    }
                 );
 
 
-            if (target) {
-
-                target.classList.add(
-                    "active-page"
+                item.classList.add(
+                    "active"
                 );
 
             }
+        );
+
+    });
 
 
-            menuItems.forEach(
-                function (menu) {
+    /* ======================================================
+       ÇIKIŞ
+    ====================================================== */
 
-                    menu.classList.remove(
-                        "active"
-                    );
-
-                }
-            );
-
-
-            item.classList.add(
-                "active"
-            );
-
-        }
-    );
-
-});
+    const logoutButton =
+        document.getElementById(
+            "logoutButton"
+        );
 
 
-/* ÇIKIŞ */
+    if (logoutButton) {
 
-const logoutButton =
-    document.getElementById(
-        "logoutButton"
-    );
+        logoutButton.addEventListener(
+            "click",
+            async function () {
 
+                await supabaseClient.auth
+                    .signOut();
 
-if (logoutButton) {
+                window.location.href =
+                    "admin-login.html";
 
-    logoutButton.addEventListener(
-        "click",
-        async function () {
+            }
+        );
 
-            await supabase.auth
-                .signOut();
-
-
-            window.location.href =
-                "admin-login.html";
-
-        }
-    );
-
-}
-```
+    }
 
 }
