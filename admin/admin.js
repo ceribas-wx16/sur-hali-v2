@@ -1,70 +1,55 @@
 console.clear();
 
-console.log("Sur Halı Admin başlatılıyor...");
+console.log("Sur Hali Admin başlatılıyor...");
 
 /* ==========================================================
 SAYFA YÜKLENDİ
 ========================================================== */
 
-document.addEventListener(
-"DOMContentLoaded",
-function () {
+document.addEventListener("DOMContentLoaded", function () {
 
 ```
-    console.log("DOM hazır.");
+console.log("DOM hazır.");
+
+const loginForm =
+    document.getElementById("loginForm");
 
 
-    /* ==================================================
-       GİRİŞ SAYFASI
-    ================================================== */
+/* ======================================================
+   GİRİŞ SAYFASI
+====================================================== */
 
-    const loginForm =
-        document.getElementById("loginForm");
+if (loginForm) {
 
+    console.log("Giriş formu bulundu.");
 
-    if (loginForm) {
+    loginForm.addEventListener(
+        "submit",
+        girisYap
+    );
 
-        console.log(
-            "Giriş formu bulundu."
-        );
-
-
-        loginForm.addEventListener(
-            "submit",
-            girisYap
-        );
+    return;
+}
 
 
-        return;
+/* ======================================================
+   ADMİN PANELİ
+====================================================== */
 
-    }
-
-
-    /* ==================================================
-       ADMİN PANELİ
-    ================================================== */
-
-    const adminContainer =
-        document.querySelector(
-            ".admin-container"
-        );
+const adminContainer =
+    document.querySelector(".admin-container");
 
 
-    if (adminContainer) {
+if (adminContainer) {
 
-        console.log(
-            "Admin paneli bulundu."
-        );
+    console.log("Admin paneli bulundu.");
 
-
-        adminPanelBaslat();
-
-    }
+    adminPanelBaslat();
 
 }
 ```
 
-);
+});
 
 /* ==========================================================
 GİRİŞ
@@ -75,10 +60,7 @@ async function girisYap(e) {
 ```
 e.preventDefault();
 
-
-console.log(
-    "Giriş butonuna basıldı."
-);
+console.log("Giriş butonuna basıldı.");
 
 
 const email =
@@ -95,9 +77,7 @@ const password =
 
 
 const mesaj =
-    document.getElementById(
-        "loginMessage"
-    );
+    document.getElementById("loginMessage");
 
 
 mesaj.textContent = "";
@@ -112,13 +92,10 @@ if (
         "supabaseClient bulunamadı."
     );
 
-
     mesaj.textContent =
         "Supabase bağlantısı kurulamadı.";
 
-
     return;
-
 }
 
 
@@ -129,10 +106,7 @@ try {
     );
 
 
-    const {
-        data,
-        error
-    } =
+    const result =
         await supabaseClient.auth
             .signInWithPassword({
 
@@ -145,31 +119,27 @@ try {
 
     console.log(
         "Supabase cevabı:",
-        data,
-        error
+        result
     );
 
 
-    if (error) {
+    if (result.error) {
 
         console.error(
             "Giriş hatası:",
-            error
+            result.error
         );
 
-
         mesaj.textContent =
-            error.message;
-
+            result.error.message;
 
         return;
-
     }
 
 
     console.log(
         "Giriş başarılı:",
-        data.user
+        result.data.user
     );
 
 
@@ -178,14 +148,12 @@ try {
 
 }
 
-
 catch (err) {
 
     console.error(
         "Beklenmeyen hata:",
         err
     );
-
 
     mesaj.textContent =
         err.message ||
@@ -221,9 +189,7 @@ if (
         "supabaseClient bulunamadı."
     );
 
-
     return;
-
 }
 
 
@@ -231,13 +197,13 @@ if (
    OTURUM KONTROLÜ
 ====================================================== */
 
-const {
-    data: {
-        session
-    }
-} =
+const sessionResult =
     await supabaseClient.auth
         .getSession();
+
+
+const session =
+    sessionResult.data.session;
 
 
 if (!session) {
@@ -246,13 +212,10 @@ if (!session) {
         "Aktif oturum bulunamadı."
     );
 
-
     window.location.href =
         "admin-login.html";
 
-
     return;
-
 }
 
 
@@ -278,187 +241,94 @@ const pages =
     );
 
 
-menuItems.forEach(
-    function (item) {
-
-        item.addEventListener(
-            "click",
-            function () {
-
-                const pageId =
-                    item.dataset.page;
+console.log(
+    "Menü sayısı:",
+    menuItems.length
+);
 
 
-                /* TÜM SAYFALARI GİZLE */
-
-                pages.forEach(
-                    function (page) {
-
-                        page.classList.remove(
-                            "active-page"
-                        );
-
-                    }
-                );
+console.log(
+    "Sayfa sayısı:",
+    pages.length
+);
 
 
-                /* SEÇİLEN SAYFAYI GÖSTER */
+menuItems.forEach(function (item) {
 
-                const targetPage =
-                    document.getElementById(
-                        pageId
-                    );
+    item.addEventListener(
+        "click",
+        function () {
+
+            console.log(
+                "Menü tıklandı:",
+                item.dataset.page
+            );
 
 
-                if (targetPage) {
+            const pageId =
+                item.dataset.page;
 
-                    targetPage.classList.add(
+
+            /* TÜM SAYFALARI GİZLE */
+
+            pages.forEach(
+                function (page) {
+
+                    page.classList.remove(
                         "active-page"
                     );
 
                 }
-
-
-                /* AKTİF MENÜ */
-
-                menuItems.forEach(
-                    function (menu) {
-
-                        menu.classList.remove(
-                            "active"
-                        );
-
-                    }
-                );
-
-
-                item.classList.add(
-                    "active"
-                );
-
-            }
-        );
-
-    }
-);
-
-
-/* ======================================================
-   YENİ ÜRÜN BUTONU
-====================================================== */
-
-const newProductButton =
-    document.getElementById(
-        "newProductButton"
-    );
-
-
-const productFormBox =
-    document.getElementById(
-        "productFormBox"
-    );
-
-
-const cancelProductButton =
-    document.getElementById(
-        "cancelProductButton"
-    );
-
-
-console.log(
-    "Yeni ürün butonu:",
-    newProductButton
-);
-
-
-console.log(
-    "Ürün formu:",
-    productFormBox
-);
-
-
-/* ======================================================
-   YENİ ÜRÜN
-====================================================== */
-
-if (
-    newProductButton &&
-    productFormBox
-) {
-
-    newProductButton.addEventListener(
-        "click",
-        function () {
-
-            console.log(
-                "Yeni ürün butonuna basıldı."
             );
 
 
-            productFormBox.style.display =
-                "block";
+            /* SEÇİLEN SAYFAYI BUL */
 
-
-            newProductButton.style.display =
-                "none";
-
-
-            /* FORMA KAYDIR */
-
-            productFormBox.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        }
-    );
-
-}
-
-
-/* ======================================================
-   VAZGEÇ
-====================================================== */
-
-if (
-    cancelProductButton &&
-    productFormBox &&
-    newProductButton
-) {
-
-    cancelProductButton.addEventListener(
-        "click",
-        function () {
-
-            console.log(
-                "Ürün formu kapatılıyor."
-            );
-
-
-            productFormBox.style.display =
-                "none";
-
-
-            newProductButton.style.display =
-                "inline-block";
-
-
-            const productForm =
+            const targetPage =
                 document.getElementById(
-                    "productForm"
+                    pageId
                 );
 
 
-            if (productForm) {
+            if (!targetPage) {
 
-                productForm.reset();
+                console.error(
+                    "Sayfa bulunamadı:",
+                    pageId
+                );
 
+                return;
             }
+
+
+            /* SEÇİLEN SAYFAYI GÖSTER */
+
+            targetPage.classList.add(
+                "active-page"
+            );
+
+
+            /* AKTİF MENÜ */
+
+            menuItems.forEach(
+                function (menu) {
+
+                    menu.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            item.classList.add(
+                "active"
+            );
 
         }
     );
 
-}
+});
 
 
 /* ======================================================
