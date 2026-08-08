@@ -110,15 +110,15 @@ console.log(
 );
 
 
-/* SUPABASE CLIENT */
+/* SUPABASE */
 
 if (
-    typeof supabaseClient ===
+    typeof supabase ===
     "undefined"
 ) {
 
     console.error(
-        "supabaseClient bulunamadı."
+        "supabase bulunamadı."
     );
 
     mesaj.textContent =
@@ -212,12 +212,12 @@ console.log(
 
 
 if (
-    typeof supabaseClient ===
+    typeof supabase ===
     "undefined"
 ) {
 
     console.error(
-        "supabaseClient bulunamadı."
+        "supabase bulunamadı."
     );
 
     return;
@@ -229,7 +229,7 @@ const {
         session
     }
 } =
-    await supabaseClient.auth
+    await supabase.auth
         .getSession();
 
 
@@ -339,7 +339,7 @@ if (logoutButton) {
         "click",
         async function () {
 
-            await supabaseClient.auth
+            await supabase.auth
                 .signOut();
 
 
