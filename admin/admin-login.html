@@ -1,74 +1,108 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+<meta charset="UTF-8">
 
-    <title>Sur Halı | Yönetici Girişi</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-  <link rel="stylesheet" href="admin-login.css">
+<title>Sur Halı | Yönetici Girişi</title>
+
+<link
+    rel="stylesheet"
+    href="admin.css"
+>
+```
 
 </head>
 
 <body>
 
-    <div class="login-container">
+```
+<div class="login-container">
 
-        <div class="login-box">
+    <div class="login-box">
 
-            <h1>Sur Halı</h1>
+        <h1>Sur Halı</h1>
 
-            <p>Yönetici Paneli</p>
+        <p>Yönetici Paneli</p>
 
-            <form id="loginForm">
 
-                <div class="form-group">
+        <form
+            id="loginForm"
+            onsubmit="girisYap(event); return false;"
+        >
 
-                    <label>E-Posta</label>
+            <div class="form-group">
 
-                    <input
-                        type="email"
-                        id="email"
-                        autocomplete="username"
-                        required
-                    >
+                <label for="email">
+                    E-Posta
+                </label>
 
-                </div>
+                <input
+                    type="email"
+                    id="email"
+                    autocomplete="username"
+                    required
+                >
 
-                <div class="form-group">
+            </div>
 
-                    <label>Şifre</label>
 
-                    <input
-                        type="password"
-                        id="password"
-                        autocomplete="current-password"
-                        required
-                    >
+            <div class="form-group">
 
-                </div>
+                <label for="password">
+                    Şifre
+                </label>
 
-                <button type="submit">
+                <input
+                    type="password"
+                    id="password"
+                    autocomplete="current-password"
+                    required
+                >
 
-                    Giriş Yap
+            </div>
 
-                </button>
 
-            </form>
+            <button
+                type="submit"
+            >
+                Giriş Yap
+            </button>
+
 
             <p id="loginMessage"></p>
 
-        </div>
+        </form>
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</div>
 
-    <script src="../js/supabase.js"></script>
 
-    <script src="admin.js"></script>
+<!-- SUPABASE -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<!-- SUPABASE AYARLARI -->
+
+<script src="../js/supabase.js"></script>
+
+
+<!-- ADMIN -->
+
+<script src="admin.js"></script>
+```
 
 </body>
 
