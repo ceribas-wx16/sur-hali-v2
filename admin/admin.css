@@ -703,7 +703,251 @@ body {
     font-weight: bold;
     letter-spacing: 2px;
 }
+/* ==========================================================
+   ÜRÜN TABLOSU
+========================================================== */
 
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.product-table th {
+    padding: 16px;
+    text-align: left;
+    font-size: 13px;
+    color: #c9a227;
+    border-bottom: 1px solid #2b2b2b;
+    font-weight: 600;
+}
+
+.product-table td {
+    padding: 16px;
+    border-bottom: 1px solid #252525;
+    color: #ddd;
+    font-size: 14px;
+}
+
+.product-table tbody tr:hover {
+    background: #1b1b1b;
+}
+
+.table-empty {
+    text-align: center !important;
+    padding: 50px !important;
+    color: #888 !important;
+}
+
+
+/* ==========================================================
+   MODAL
+========================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    background: rgba(0, 0, 0, 0.78);
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 600px;
+
+    background: #151515;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 12px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 22px 25px;
+
+    border-bottom: 1px solid #2b2b2b;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #c9a227;
+    font-size: 21px;
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #aaa;
+
+    font-size: 28px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #c9a227;
+    background: transparent;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    padding: 20px 25px;
+
+    border-top: 1px solid #2b2b2b;
+}
+
+
+/* ==========================================================
+   ÜRÜN FORMU
+========================================================== */
+
+.modal .form-group {
+    margin-bottom: 20px;
+}
+
+.modal .form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #ddd;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.modal .form-group input,
+.modal .form-group select,
+.modal .form-group textarea {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 1px solid #333;
+    border-radius: 6px;
+
+    background: #0f0f0f;
+    color: #fff;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: border-color .2s;
+}
+
+.modal .form-group input:focus,
+.modal .form-group select:focus,
+.modal .form-group textarea:focus {
+    border-color: #c9a227;
+}
+
+.modal .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.modal .form-group select {
+    cursor: pointer;
+}
+
+.modal .form-group select option {
+    background: #151515;
+    color: #fff;
+}
+
+.modal .form-group small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #777;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   MODAL BUTONLARI
+========================================================== */
+
+.modal-footer .gold-button,
+.modal-footer .outline-button {
+    width: auto;
+    min-width: 120px;
+}
+
+
+/* ==========================================================
+   MOBİL
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-content {
+        max-height: 95vh;
+    }
+
+    .modal-header {
+        padding: 18px;
+    }
+
+    .modal-body {
+        padding: 18px;
+    }
+
+    .modal-footer {
+        padding: 15px 18px;
+        flex-direction: column;
+    }
+
+    .modal-footer button {
+        width: 100%;
+    }
+
+}
 
 
 
