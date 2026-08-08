@@ -1,5 +1,5 @@
-```javascript
 console.log("Sur Halı Admin başlatılıyor...");
+
 
 /* ==========================================================
    SAYFA YÜKLENDİ
@@ -430,7 +430,6 @@ async function adminPanelBaslat() {
                 newProductButton.style.display =
                     "inline-block";
 
-
                 const productForm =
                     document.getElementById(
                         "productForm"
@@ -481,4 +480,3 @@ async function adminPanelBaslat() {
     );
 
 }
-```
