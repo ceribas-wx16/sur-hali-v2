@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form =
         document.getElementById("loginForm");
 
-    if(form){
+    if (form) {
 
         form.addEventListener(
             "submit",
@@ -33,29 +33,32 @@ document.addEventListener("DOMContentLoaded", () => {
    GİRİŞ
 ========================================================== */
 
-async function girisYap(e){
+async function girisYap(e) {
 
     e.preventDefault();
 
     const email =
         document
-        .getElementById("email")
-        .value
-        .trim();
+            .getElementById("email")
+            .value
+            .trim();
 
     const password =
         document
-        .getElementById("password")
-        .value;
+            .getElementById("password")
+            .value;
 
     const mesaj =
         document.getElementById("loginMessage");
 
     mesaj.textContent = "";
 
-    try{
+    try {
 
-        const { error } =
+        console.log("Supabase giriş deneniyor...");
+        console.log("E-posta:", email);
+
+        const { data, error } =
             await supabase.auth.signInWithPassword({
 
                 email: email,
@@ -64,25 +67,45 @@ async function girisYap(e){
 
             });
 
-        if(error){
+        console.log("Supabase cevap:", data, error);
+
+
+        if (error) {
+
+            console.error(
+                "SUPABASE GİRİŞ HATASI:",
+                error
+            );
 
             mesaj.textContent =
-                "E-posta veya şifre hatalı.";
+                error.message ||
+                "Giriş yapılamadı.";
 
             return;
 
         }
+
+
+        console.log(
+            "Giriş başarılı:",
+            data.user
+        );
+
 
         window.location.href =
             "admin.html";
 
     }
 
-    catch(err){
+    catch (err) {
 
-        console.error(err);
+        console.error(
+            "BEKLENMEYEN HATA:",
+            err
+        );
 
         mesaj.textContent =
+            err.message ||
             "Beklenmeyen bir hata oluştu.";
 
     }
