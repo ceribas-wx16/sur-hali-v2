@@ -1,21 +1,14 @@
 console.log("Sur Halı Admin başlatılıyor...");
 
-
-/* ==========================================================
-   SAYFA YÜKLENDİ
-========================================================== */
-
 document.addEventListener("DOMContentLoaded", function () {
 
     console.log("DOM hazır.");
 
-    const loginForm =
-        document.getElementById("loginForm");
+    const loginForm = document.getElementById("loginForm");
 
-
-    /* ======================================================
+    /* ==========================================================
        GİRİŞ SAYFASI
-    ====================================================== */
+    ========================================================== */
 
     if (loginForm) {
 
@@ -29,27 +22,23 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             loginForm.dataset.supabaseBound = "true";
-
         }
 
         return;
     }
 
-
-    /* ======================================================
+    /* ==========================================================
        ADMİN PANELİ
-    ====================================================== */
+    ========================================================== */
 
     const adminContainer =
         document.querySelector(".admin-container");
-
 
     if (adminContainer) {
 
         console.log("Admin paneli bulundu.");
 
         adminPanelBaslat();
-
     }
 
 });
@@ -63,9 +52,6 @@ async function girisYap(e) {
 
     e.preventDefault();
 
-    console.log("Giriş deneniyor...");
-
-
     const emailElement =
         document.getElementById("email");
 
@@ -75,17 +61,9 @@ async function girisYap(e) {
     const mesaj =
         document.getElementById("loginMessage");
 
-
     if (!emailElement || !passwordElement) {
-
-        console.error(
-            "E-posta veya şifre alanı bulunamadı."
-        );
-
         return;
-
     }
-
 
     const email =
         emailElement.value.trim();
@@ -93,86 +71,45 @@ async function girisYap(e) {
     const password =
         passwordElement.value;
 
-
     if (mesaj) {
-
         mesaj.textContent = "";
-
     }
 
-
-    /* ======================================================
-       SUPABASE KONTROLÜ
-    ====================================================== */
-
-    if (
-        typeof supabaseClient ===
-        "undefined"
-    ) {
-
-        console.error(
-            "supabaseClient bulunamadı."
-        );
+    if (typeof supabaseClient === "undefined") {
 
         if (mesaj) {
-
             mesaj.textContent =
                 "Supabase bağlantısı kurulamadı.";
-
         }
 
         return;
-
     }
-
 
     try {
 
-        console.log(
-            "Supabase giriş isteği gönderiliyor..."
-        );
-
-
-        const {
-            data,
-            error
-        } =
+        const { data, error } =
             await supabaseClient.auth.signInWithPassword({
-
                 email: email,
-
                 password: password
-
             });
-
 
         if (error) {
 
-            console.error(
-                "Giriş hatası:",
-                error
-            );
+            console.error("Giriş hatası:", error);
 
             if (mesaj) {
-
-                mesaj.textContent =
-                    error.message;
-
+                mesaj.textContent = error.message;
             }
 
             return;
-
         }
-
 
         console.log(
             "Giriş başarılı:",
             data.user
         );
 
-
-        window.location.href =
-            "admin.html";
+        window.location.href = "admin.html";
 
     }
 
@@ -183,46 +120,30 @@ async function girisYap(e) {
             error
         );
 
-
         if (mesaj) {
-
             mesaj.textContent =
                 error.message ||
                 "Beklenmeyen bir hata oluştu.";
-
         }
-
     }
-
 }
 
 
 /* ==========================================================
-   ADMİN PANELİ BAŞLAT
+   ADMİN PANELİ
 ========================================================== */
 
 async function adminPanelBaslat() {
 
-    console.log(
-        "Admin panel başlatılıyor..."
-    );
+    console.log("Admin panel başlatılıyor...");
 
-
-    /* ======================================================
-       SUPABASE KONTROLÜ
-    ====================================================== */
-
-    if (
-        typeof supabaseClient ===
-        "undefined"
-    ) {
+    if (typeof supabaseClient === "undefined") {
 
         console.error(
             "supabaseClient bulunamadı."
         );
 
         return;
-
     }
 
 
@@ -238,7 +159,6 @@ async function adminPanelBaslat() {
         } =
             await supabaseClient.auth.getSession();
 
-
         if (error) {
 
             console.error(
@@ -247,9 +167,7 @@ async function adminPanelBaslat() {
             );
 
             return;
-
         }
-
 
         if (!data.session) {
 
@@ -261,9 +179,7 @@ async function adminPanelBaslat() {
                 "admin-login.html";
 
             return;
-
         }
-
 
         console.log(
             "Admin oturumu aktif:",
@@ -280,7 +196,6 @@ async function adminPanelBaslat() {
         );
 
         return;
-
     }
 
 
@@ -295,7 +210,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       SOL MENÜ
+       MENÜ
     ====================================================== */
 
     const menuItems =
@@ -303,22 +218,6 @@ async function adminPanelBaslat() {
             ".sidebar .menu-item[data-page]"
         );
 
-
-    console.log(
-        "Menü sayısı:",
-        menuItems.length
-    );
-
-
-    console.log(
-        "Sayfa sayısı:",
-        pages.length
-    );
-
-
-    /* ======================================================
-       SAYFA AÇ
-    ====================================================== */
 
     function sayfaAc(pageId) {
 
@@ -330,12 +229,8 @@ async function adminPanelBaslat() {
 
         });
 
-
         const targetPage =
-            document.getElementById(
-                pageId
-            );
-
+            document.getElementById(pageId);
 
         if (!targetPage) {
 
@@ -345,14 +240,11 @@ async function adminPanelBaslat() {
             );
 
             return;
-
         }
-
 
         targetPage.classList.add(
             "active-page"
         );
-
 
         menuItems.forEach(function (item) {
 
@@ -360,27 +252,20 @@ async function adminPanelBaslat() {
                 "active"
             );
 
-
             if (
-                item.getAttribute(
-                    "data-page"
-                ) === pageId
+                item.getAttribute("data-page") ===
+                pageId
             ) {
 
                 item.classList.add(
                     "active"
                 );
-
             }
 
         });
 
     }
 
-
-    /* ======================================================
-       SOL MENÜ TIKLAMALARI
-    ====================================================== */
 
     menuItems.forEach(function (menuItem) {
 
@@ -390,12 +275,10 @@ async function adminPanelBaslat() {
 
                 e.preventDefault();
 
-
                 const pageId =
                     menuItem.getAttribute(
                         "data-page"
                     );
-
 
                 sayfaAc(pageId);
 
@@ -414,7 +297,6 @@ async function adminPanelBaslat() {
             ".quick-actions [data-page]"
         );
 
-
     quickButtons.forEach(function (button) {
 
         button.addEventListener(
@@ -426,7 +308,6 @@ async function adminPanelBaslat() {
                         "data-page"
                     );
 
-
                 sayfaAc(pageId);
 
             }
@@ -436,7 +317,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       ÜRÜN FORM ELEMANLARI
+       ÜRÜN FORMU
     ====================================================== */
 
     const newProductButton =
@@ -444,18 +325,15 @@ async function adminPanelBaslat() {
             "newProductButton"
         );
 
-
     const productFormBox =
         document.getElementById(
             "productFormBox"
         );
 
-
     const productForm =
         document.getElementById(
             "productForm"
         );
-
 
     const cancelProductButton =
         document.getElementById(
@@ -463,141 +341,7 @@ async function adminPanelBaslat() {
         );
 
 
-    /* ======================================================
-       DÜZENLENEN ÜRÜN
-    ====================================================== */
-
     let duzenlenenUrunId = null;
-
-
-    /* ======================================================
-       FORM MESAJI
-    ====================================================== */
-
-    function formMesajiOlustur() {
-
-        let message =
-            document.getElementById(
-                "productFormMessage"
-            );
-
-
-        if (message) {
-
-            return message;
-
-        }
-
-
-        if (!productForm) {
-
-            return null;
-
-        }
-
-
-        message =
-            document.createElement(
-                "div"
-            );
-
-
-        message.id =
-            "productFormMessage";
-
-
-        message.style.marginTop =
-            "15px";
-
-
-        message.style.padding =
-            "12px";
-
-
-        message.style.borderRadius =
-            "8px";
-
-
-        message.style.display =
-            "none";
-
-
-        productForm.appendChild(
-            message
-        );
-
-
-        return message;
-
-    }
-
-
-    function formMesajiGoster(
-        text,
-        success
-    ) {
-
-        const message =
-            formMesajiOlustur();
-
-
-        if (!message) {
-
-            return;
-
-        }
-
-
-        message.textContent =
-            text;
-
-
-        message.style.display =
-            "block";
-
-
-        if (success) {
-
-            message.style.border =
-                "1px solid #4caf50";
-
-            message.style.background =
-                "#f0fff4";
-
-        }
-
-        else {
-
-            message.style.border =
-                "1px solid #d9534f";
-
-            message.style.background =
-                "#fff5f5";
-
-        }
-
-    }
-
-
-    function formMesajiTemizle() {
-
-        const message =
-            document.getElementById(
-                "productFormMessage"
-            );
-
-
-        if (message) {
-
-            message.textContent =
-                "";
-
-            message.style.display =
-                "none";
-
-        }
-
-    }
 
 
     /* ======================================================
@@ -606,8 +350,7 @@ async function adminPanelBaslat() {
 
     if (
         newProductButton &&
-        productFormBox &&
-        productForm
+        productFormBox
     ) {
 
         newProductButton.addEventListener(
@@ -616,48 +359,37 @@ async function adminPanelBaslat() {
 
                 duzenlenenUrunId = null;
 
-
-                productForm.reset();
-
+                if (productForm) {
+                    productForm.reset();
+                }
 
                 const formTitle =
-                    productFormBox.querySelector(
-                        "h2"
-                    );
-
+                    productFormBox.querySelector("h2");
 
                 if (formTitle) {
-
                     formTitle.textContent =
                         "Yeni Ürün Ekle";
-
                 }
-
 
                 const saveButton =
-                    productForm.querySelector(
-                        'button[type="submit"]'
-                    );
-
+                    productForm
+                        ? productForm.querySelector(
+                            'button[type="submit"]'
+                        )
+                        : null;
 
                 if (saveButton) {
-
                     saveButton.textContent =
                         "Ürünü Kaydet";
-
                 }
-
 
                 productFormBox.style.display =
                     "block";
 
-
                 newProductButton.style.display =
                     "none";
 
-
                 formMesajiTemizle();
-
 
                 productFormBox.scrollIntoView({
                     behavior: "smooth",
@@ -666,7 +398,6 @@ async function adminPanelBaslat() {
 
             }
         );
-
     }
 
 
@@ -686,32 +417,126 @@ async function adminPanelBaslat() {
 
                 duzenlenenUrunId = null;
 
-
                 productFormBox.style.display =
                     "none";
-
 
                 newProductButton.style.display =
                     "inline-block";
 
-
                 if (productForm) {
-
                     productForm.reset();
-
                 }
-
 
                 formMesajiTemizle();
 
             }
         );
-
     }
 
 
     /* ======================================================
-       ÜRÜN KAYDET
+       FORM MESAJLARI
+    ====================================================== */
+
+    function formMesajiOlustur() {
+
+        let message =
+            document.getElementById(
+                "productFormMessage"
+            );
+
+        if (message) {
+            return message;
+        }
+
+        if (!productForm) {
+            return null;
+        }
+
+        message =
+            document.createElement("div");
+
+        message.id =
+            "productFormMessage";
+
+        message.style.marginTop =
+            "15px";
+
+        message.style.padding =
+            "12px";
+
+        message.style.borderRadius =
+            "8px";
+
+        message.style.display =
+            "none";
+
+        productForm.appendChild(
+            message
+        );
+
+        return message;
+    }
+
+
+    function formMesajiGoster(
+        text,
+        success
+    ) {
+
+        const message =
+            formMesajiOlustur();
+
+        if (!message) {
+            return;
+        }
+
+        message.textContent =
+            text;
+
+        message.style.display =
+            "block";
+
+        if (success) {
+
+            message.style.border =
+                "1px solid #4caf50";
+
+            message.style.background =
+                "#f0fff4";
+
+        } else {
+
+            message.style.border =
+                "1px solid #d9534f";
+
+            message.style.background =
+                "#fff5f5";
+        }
+
+    }
+
+
+    function formMesajiTemizle() {
+
+        const message =
+            document.getElementById(
+                "productFormMessage"
+            );
+
+        if (message) {
+
+            message.textContent =
+                "";
+
+            message.style.display =
+                "none";
+        }
+    }
+
+
+    /* ======================================================
+       ÜRÜN KAYDET / GÜNCELLE
     ====================================================== */
 
     if (productForm) {
@@ -722,44 +547,32 @@ async function adminPanelBaslat() {
 
                 e.preventDefault();
 
-
-                console.log(
-                    "Ürün kaydetme başladı."
-                );
-
-
                 formMesajiTemizle();
-
 
                 const nameElement =
                     document.getElementById(
                         "productName"
                     );
 
-
                 const categoryElement =
                     document.getElementById(
                         "productCategory"
                     );
-
 
                 const sizeElement =
                     document.getElementById(
                         "productSize"
                     );
 
-
                 const priceElement =
                     document.getElementById(
                         "productPrice"
                     );
 
-
                 const descriptionElement =
                     document.getElementById(
                         "productDescription"
                     );
-
 
                 const activeElement =
                     document.getElementById(
@@ -778,35 +591,29 @@ async function adminPanelBaslat() {
                     );
 
                     return;
-
                 }
 
 
                 const name =
                     nameElement.value.trim();
 
-
                 const category =
                     categoryElement.value;
-
 
                 const size =
                     sizeElement
                         ? sizeElement.value.trim()
                         : "";
 
-
                 const priceText =
                     priceElement
                         ? priceElement.value
                         : "";
 
-
                 const description =
                     descriptionElement
                         ? descriptionElement.value.trim()
                         : "";
-
 
                 const isActive =
                     activeElement
@@ -824,7 +631,6 @@ async function adminPanelBaslat() {
                     nameElement.focus();
 
                     return;
-
                 }
 
 
@@ -838,24 +644,17 @@ async function adminPanelBaslat() {
                     categoryElement.focus();
 
                     return;
-
                 }
 
 
                 let price = null;
 
-
                 if (priceText !== "") {
 
                     price =
-                        Number(
-                            priceText
-                        );
+                        Number(priceText);
 
-
-                    if (
-                        Number.isNaN(price)
-                    ) {
+                    if (Number.isNaN(price)) {
 
                         formMesajiGoster(
                             "Fiyat bilgisi geçerli değil.",
@@ -863,24 +662,7 @@ async function adminPanelBaslat() {
                         );
 
                         return;
-
                     }
-
-                }
-
-
-                if (
-                    typeof supabaseClient ===
-                    "undefined"
-                ) {
-
-                    formMesajiGoster(
-                        "Supabase bağlantısı bulunamadı.",
-                        false
-                    );
-
-                    return;
-
                 }
 
 
@@ -895,12 +677,10 @@ async function adminPanelBaslat() {
                     saveButton.disabled =
                         true;
 
-
                     saveButton.textContent =
                         duzenlenenUrunId
                             ? "Güncelleniyor..."
                             : "Kaydediliyor...";
-
                 }
 
 
@@ -921,7 +701,6 @@ async function adminPanelBaslat() {
 
                         is_active:
                             isActive
-
                     };
 
 
@@ -937,9 +716,7 @@ async function adminPanelBaslat() {
                         } =
                             await supabaseClient
                                 .from("products")
-                                .update(
-                                    urunData
-                                )
+                                .update(urunData)
                                 .eq(
                                     "id",
                                     duzenlenenUrunId
@@ -955,24 +732,19 @@ async function adminPanelBaslat() {
                                 error
                             );
 
-
                             formMesajiGoster(
                                 "Ürün güncellenemedi: " +
                                 error.message,
                                 false
                             );
 
-
                             return;
-
                         }
-
 
                         console.log(
                             "Ürün güncellendi:",
                             data
                         );
-
 
                         formMesajiGoster(
                             "Ürün başarıyla güncellendi.",
@@ -996,26 +768,8 @@ async function adminPanelBaslat() {
                                 .from("products")
                                 .insert([
                                     {
-                                        name:
-                                            name,
-
-                                        category:
-                                            category,
-
-                                        size:
-                                            size || null,
-
-                                        price:
-                                            price,
-
-                                        description:
-                                            description || null,
-
-                                        image_url:
-                                            null,
-
-                                        is_active:
-                                            isActive
+                                        ...urunData,
+                                        image_url: null
                                     }
                                 ])
                                 .select()
@@ -1029,86 +783,56 @@ async function adminPanelBaslat() {
                                 error
                             );
 
-
                             formMesajiGoster(
                                 "Ürün kaydedilemedi: " +
                                 error.message,
                                 false
                             );
 
-
                             return;
-
                         }
-
 
                         console.log(
                             "Ürün başarıyla kaydedildi:",
                             data
                         );
 
-
                         formMesajiGoster(
                             "Ürün başarıyla kaydedildi.",
                             true
                         );
-
                     }
 
 
-                    duzenlenenUrunId =
-                        null;
-
+                    duzenlenenUrunId = null;
 
                     productForm.reset();
-
-
-                    const formTitle =
-                        productFormBox.querySelector(
-                            "h2"
-                        );
-
-
-                    if (formTitle) {
-
-                        formTitle.textContent =
-                            "Yeni Ürün Ekle";
-
-                    }
-
 
                     await urunleriYukle();
 
                     await dashboardIstatistikleriniYukle();
 
 
-                    setTimeout(
-                        function () {
+                    setTimeout(function () {
 
-                            productFormBox.style.display =
-                                "none";
+                        productFormBox.style.display =
+                            "none";
 
+                        newProductButton.style.display =
+                            "inline-block";
 
-                            newProductButton.style.display =
-                                "inline-block";
+                        formMesajiTemizle();
 
-
-                            formMesajiTemizle();
-
-                        },
-                        800
-                    );
+                    }, 800);
 
                 }
-
 
                 catch (error) {
 
                     console.error(
-                        "Ürün işlem hatası:",
+                        "Ürün işlemi sırasında hata:",
                         error
                     );
-
 
                     formMesajiGoster(
                         "İşlem sırasında hata oluştu: " +
@@ -1118,7 +842,6 @@ async function adminPanelBaslat() {
 
                 }
 
-
                 finally {
 
                     if (saveButton) {
@@ -1126,17 +849,14 @@ async function adminPanelBaslat() {
                         saveButton.disabled =
                             false;
 
-
                         saveButton.textContent =
                             "Ürünü Kaydet";
-
                     }
 
                 }
 
             }
         );
-
     }
 
 
@@ -1151,17 +871,13 @@ async function adminPanelBaslat() {
                 "productList"
             );
 
-
         const productCount =
             document.getElementById(
                 "productCount"
             );
 
-
         if (!productList) {
-
             return;
-
         }
 
 
@@ -1189,7 +905,6 @@ async function adminPanelBaslat() {
                     error
                 );
 
-
                 productList.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">!</div>
@@ -1198,24 +913,11 @@ async function adminPanelBaslat() {
                     </div>
                 `;
 
-
-                if (productCount) {
-
-                    productCount.textContent =
-                        "Hata";
-
-                }
-
-
                 return;
-
             }
 
 
-            if (
-                !data ||
-                data.length === 0
-            ) {
+            if (!data || data.length === 0) {
 
                 productList.innerHTML = `
                     <div class="empty-state">
@@ -1228,28 +930,25 @@ async function adminPanelBaslat() {
                     </div>
                 `;
 
-
                 if (productCount) {
-
                     productCount.textContent =
                         "0 ürün";
-
                 }
 
-
                 return;
-
             }
 
 
             if (productCount) {
 
                 productCount.textContent =
-                    data.length +
-                    " ürün";
-
+                    data.length + " ürün";
             }
 
+
+            /* ==================================================
+               ÜRÜN KARTLARINI OLUŞTUR
+            ================================================== */
 
             productList.innerHTML =
                 data.map(function (product) {
@@ -1282,6 +981,7 @@ async function adminPanelBaslat() {
 
 
                     return `
+
                         <div
                             class="product-item"
                             data-product-id="${escapeHTML(product.id)}"
@@ -1304,16 +1004,12 @@ async function adminPanelBaslat() {
 
                                 <p>
                                     <strong>Kategori:</strong>
-                                    ${escapeHTML(
-                                        product.category || "-"
-                                    )}
+                                    ${escapeHTML(product.category || "-")}
                                 </p>
 
                                 <p>
                                     <strong>Ölçü:</strong>
-                                    ${escapeHTML(
-                                        product.size || "-"
-                                    )}
+                                    ${escapeHTML(product.size || "-")}
                                 </p>
 
                                 <p>
@@ -1337,6 +1033,8 @@ async function adminPanelBaslat() {
                             </div>
 
 
+                            <!-- SAĞ TARAF -->
+
                             <div
                                 class="product-item-status"
                                 style="
@@ -1344,7 +1042,7 @@ async function adminPanelBaslat() {
                                     flex-direction:column;
                                     align-items:flex-end;
                                     gap:12px;
-                                    min-width:150px;
+                                    min-width:170px;
                                 "
                             >
 
@@ -1353,11 +1051,12 @@ async function adminPanelBaslat() {
                                 </span>
 
 
+                                <!-- BUTONLAR -->
+
                                 <div
                                     style="
                                         display:flex;
                                         gap:8px;
-                                        flex-wrap:wrap;
                                     "
                                 >
 
@@ -1366,7 +1065,7 @@ async function adminPanelBaslat() {
                                         class="outline-button edit-product-button"
                                         data-id="${escapeHTML(product.id)}"
                                         style="
-                                            padding:8px 12px;
+                                            padding:8px 14px;
                                             cursor:pointer;
                                         "
                                     >
@@ -1379,12 +1078,13 @@ async function adminPanelBaslat() {
                                         class="delete-product-button"
                                         data-id="${escapeHTML(product.id)}"
                                         style="
-                                            padding:8px 12px;
+                                            padding:8px 14px;
                                             cursor:pointer;
                                             border:1px solid #d9534f;
-                                            background:#fff;
+                                            background:#ffffff;
                                             color:#d9534f;
                                             border-radius:6px;
+                                            font-weight:600;
                                         "
                                     >
                                         Sil
@@ -1395,13 +1095,14 @@ async function adminPanelBaslat() {
                             </div>
 
                         </div>
+
                     `;
 
                 }).join("");
 
 
             /* ==================================================
-               DÜZENLE
+               DÜZENLE BUTONLARI
             ================================================== */
 
             productList
@@ -1418,7 +1119,6 @@ async function adminPanelBaslat() {
                                 button.getAttribute(
                                     "data-id"
                                 );
-
 
                             const product =
                                 data.find(function (item) {
@@ -1437,7 +1137,6 @@ async function adminPanelBaslat() {
                                 );
 
                                 return;
-
                             }
 
 
@@ -1452,7 +1151,7 @@ async function adminPanelBaslat() {
 
 
             /* ==================================================
-               SİL
+               SİL BUTONLARI
             ================================================== */
 
             productList
@@ -1470,7 +1169,6 @@ async function adminPanelBaslat() {
                                     "data-id"
                                 );
 
-
                             const product =
                                 data.find(function (item) {
 
@@ -1483,8 +1181,11 @@ async function adminPanelBaslat() {
 
                             if (!product) {
 
-                                return;
+                                alert(
+                                    "Ürün bulunamadı."
+                                );
 
+                                return;
                             }
 
 
@@ -1492,15 +1193,20 @@ async function adminPanelBaslat() {
                                 confirm(
                                     '"' +
                                     product.name +
-                                    '" adlı ürünü silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz.'
+                                    '" adlı ürünü silmek istediğinize emin misiniz?\n\nBu ürün Supabase veritabanından silinecektir.'
                                 );
 
 
                             if (!onay) {
-
                                 return;
-
                             }
+
+
+                            button.disabled =
+                                true;
+
+                            button.textContent =
+                                "Siliniyor...";
 
 
                             await urunSil(
@@ -1514,14 +1220,12 @@ async function adminPanelBaslat() {
 
         }
 
-
         catch (error) {
 
             console.error(
                 "Ürünleri yüklerken hata:",
                 error
             );
-
 
             productList.innerHTML = `
                 <div class="empty-state">
@@ -1530,7 +1234,6 @@ async function adminPanelBaslat() {
                     <p>${escapeHTML(error.message)}</p>
                 </div>
             `;
-
         }
 
     }
@@ -1547,9 +1250,7 @@ async function adminPanelBaslat() {
             !productFormBox ||
             !newProductButton
         ) {
-
             return;
-
         }
 
 
@@ -1603,12 +1304,10 @@ async function adminPanelBaslat() {
                 "h2"
             );
 
-
         if (formTitle) {
 
             formTitle.textContent =
                 "Ürünü Düzenle";
-
         }
 
 
@@ -1617,12 +1316,10 @@ async function adminPanelBaslat() {
                 'button[type="submit"]'
             );
 
-
         if (saveButton) {
 
             saveButton.textContent =
                 "Güncelle";
-
         }
 
 
@@ -1631,7 +1328,6 @@ async function adminPanelBaslat() {
 
         productFormBox.style.display =
             "block";
-
 
         newProductButton.style.display =
             "none";
@@ -1651,6 +1347,12 @@ async function adminPanelBaslat() {
 
     async function urunSil(productId) {
 
+        console.log(
+            "Ürün silme işlemi başladı:",
+            productId
+        );
+
+
         try {
 
             const {
@@ -1668,20 +1370,22 @@ async function adminPanelBaslat() {
             if (error) {
 
                 console.error(
-                    "Ürün silme hatası:",
+                    "Supabase silme hatası:",
                     error
                 );
 
-
                 alert(
-                    "Ürün silinemedi:\n" +
+                    "Ürün silinemedi:\n\n" +
                     error.message
                 );
 
-
                 return;
-
             }
+
+
+            console.log(
+                "Ürün Supabase'den silindi."
+            );
 
 
             await urunleriYukle();
@@ -1695,20 +1399,17 @@ async function adminPanelBaslat() {
 
         }
 
-
         catch (error) {
 
             console.error(
-                "Ürün silme hatası:",
+                "Ürün silme sırasında hata:",
                 error
             );
 
-
             alert(
-                "Ürün silinirken hata oluştu:\n" +
+                "Ürün silinirken hata oluştu:\n\n" +
                 error.message
             );
-
         }
 
     }
@@ -1724,11 +1425,8 @@ async function adminPanelBaslat() {
             value === null ||
             value === undefined
         ) {
-
             return "";
-
         }
-
 
         return String(value)
             .replace(/&/g, "&amp;")
@@ -1736,7 +1434,6 @@ async function adminPanelBaslat() {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
 
@@ -1770,14 +1467,11 @@ async function adminPanelBaslat() {
                         "totalProducts"
                     );
 
-
                 if (totalProducts) {
 
                     totalProducts.textContent =
                         totalCount || 0;
-
                 }
-
             }
 
 
@@ -1807,14 +1501,11 @@ async function adminPanelBaslat() {
                         "activeProducts"
                     );
 
-
                 if (activeProducts) {
 
                     activeProducts.textContent =
                         activeCount || 0;
-
                 }
-
             }
 
 
@@ -1823,12 +1514,9 @@ async function adminPanelBaslat() {
                     "totalImages"
                 );
 
-
             if (totalImages) {
-
                 totalImages.textContent =
                     "0";
-
             }
 
 
@@ -1837,16 +1525,12 @@ async function adminPanelBaslat() {
                     "storageUsage"
                 );
 
-
             if (storageUsage) {
-
                 storageUsage.textContent =
                     "0 MB";
-
             }
 
         }
-
 
         catch (error) {
 
@@ -1854,7 +1538,6 @@ async function adminPanelBaslat() {
                 "Dashboard istatistik hatası:",
                 error
             );
-
         }
 
     }
@@ -1885,17 +1568,11 @@ async function adminPanelBaslat() {
             "click",
             async function () {
 
-                console.log(
-                    "Çıkış yapılıyor..."
-                );
-
-
                 try {
 
                     await supabaseClient.auth.signOut();
 
                 }
-
 
                 catch (error) {
 
@@ -1903,7 +1580,6 @@ async function adminPanelBaslat() {
                         "Çıkış hatası:",
                         error
                     );
-
                 }
 
 
