@@ -19,15 +19,7 @@
 
 </head>
 
-
 <body>
-
-<!-- ==================================================
-     ADMİN PANELİ
-================================================== -->
-
-<div class="admin-container">
-
 
     <!-- ==================================================
          SOL MENÜ
@@ -110,7 +102,6 @@
     </aside>
 
 
-
     <!-- ==================================================
          ANA İÇERİK
     ================================================== -->
@@ -142,11 +133,6 @@
             </div>
 
 
-
-            <!-- ==================================================
-                 İSTATİSTİKLER
-            ================================================== -->
-
             <div class="stats-grid">
 
 
@@ -171,7 +157,6 @@
                 </div>
 
 
-
                 <div class="stat-card">
 
                     <div class="stat-icon">
@@ -191,7 +176,6 @@
                     </div>
 
                 </div>
-
 
 
                 <div class="stat-card">
@@ -215,7 +199,6 @@
                 </div>
 
 
-
                 <div class="stat-card">
 
                     <div class="stat-icon">
@@ -229,7 +212,7 @@
                         </span>
 
                         <strong id="storageUsage">
-                            0 MB
+                            —
                         </strong>
 
                     </div>
@@ -239,20 +222,13 @@
             </div>
 
 
-
-            <!-- ==================================================
-                 HIZLI İŞLEMLER
-            ================================================== -->
-
             <div class="dashboard-box">
 
                 <h2>
                     Hızlı İşlemler
                 </h2>
 
-
                 <div class="quick-actions">
-
 
                     <button
                         type="button"
@@ -263,28 +239,19 @@
                     </button>
 
 
-
                     <button
                         type="button"
                         class="gold-button"
                         data-page="imagesPage"
-                        style="
-                            color:#D4AF37 !important;
-                            background:#111111 !important;
-                            border:1px solid #D4AF37 !important;
-                            font-weight:600;
-                        "
                     >
                         Resim Yönetimi
                     </button>
-
 
                 </div>
 
             </div>
 
         </section>
-
 
 
         <!-- ==================================================
@@ -295,7 +262,6 @@
             class="page"
             id="productsPage"
         >
-
 
             <div class="page-header">
 
@@ -323,17 +289,13 @@
             </div>
 
 
-
-            <!-- ==================================================
-                 YENİ ÜRÜN FORMU
-            ================================================== -->
+            <!-- ÜRÜN FORMU -->
 
             <div
                 class="content-box"
                 id="productFormBox"
                 style="display:none;"
             >
-
 
                 <div class="form-header">
 
@@ -352,14 +314,10 @@
                 </div>
 
 
-
                 <form id="productForm">
-
 
                     <div class="product-form-grid">
 
-
-                        <!-- ÜRÜN ADI -->
 
                         <div class="form-group">
 
@@ -376,9 +334,6 @@
 
                         </div>
 
-
-
-                        <!-- KATEGORİ -->
 
                         <div class="form-group">
 
@@ -420,9 +375,6 @@
                         </div>
 
 
-
-                        <!-- ÖLÇÜ -->
-
                         <div class="form-group">
 
                             <label for="productSize">
@@ -437,9 +389,6 @@
 
                         </div>
 
-
-
-                        <!-- FİYAT -->
 
                         <div class="form-group">
 
@@ -458,9 +407,6 @@
                         </div>
 
 
-
-                        <!-- AÇIKLAMA -->
-
                         <div
                             class="form-group"
                             style="grid-column:1 / -1;"
@@ -478,9 +424,6 @@
 
                         </div>
 
-
-
-                        <!-- DURUM -->
 
                         <div class="form-group">
 
@@ -502,15 +445,10 @@
 
                         </div>
 
-
                     </div>
 
 
-
-                    <!-- FORM BUTONLARI -->
-
                     <div class="form-actions">
-
 
                         <button
                             type="submit"
@@ -518,7 +456,6 @@
                         >
                             Ürünü Kaydet
                         </button>
-
 
 
                         <button
@@ -529,25 +466,19 @@
                             Vazgeç
                         </button>
 
-
                     </div>
-
 
                 </form>
 
             </div>
 
 
-
-            <!-- ==================================================
-                 ÜRÜN LİSTESİ
-            ================================================== -->
+            <!-- ÜRÜN LİSTESİ -->
 
             <div
                 class="content-box"
                 id="productListBox"
             >
-
 
                 <div class="list-header">
 
@@ -574,7 +505,6 @@
                 </div>
 
 
-
                 <div
                     class="product-list"
                     id="productList"
@@ -599,11 +529,9 @@
 
                 </div>
 
-
             </div>
 
         </section>
-
 
 
         <!-- ==================================================
@@ -614,7 +542,6 @@
             class="page"
             id="imagesPage"
         >
-
 
             <div class="page-header">
 
@@ -633,13 +560,9 @@
             </div>
 
 
-
-            <!-- ==================================================
-                 RESİM YÜKLEME
-            ================================================== -->
+            <!-- RESİM YÜKLEME -->
 
             <div class="content-box">
-
 
                 <div class="form-header">
 
@@ -658,9 +581,6 @@
                 </div>
 
 
-
-                <!-- DOSYA -->
-
                 <div class="form-group">
 
                     <label for="imageFile">
@@ -675,9 +595,6 @@
 
                 </div>
 
-
-
-                <!-- KATEGORİ -->
 
                 <div
                     class="form-group"
@@ -719,9 +636,6 @@
                 </div>
 
 
-
-                <!-- ÖNİZLEME -->
-
                 <div
                     id="imagePreviewBox"
                     style="
@@ -758,9 +672,6 @@
                 </div>
 
 
-
-                <!-- YÜKLE -->
-
                 <div
                     class="form-actions"
                     style="margin-top:25px;"
@@ -770,21 +681,12 @@
                         type="button"
                         id="uploadImageButton"
                         class="gold-button"
-                        style="
-                            color:#D4AF37 !important;
-                            background:#111111 !important;
-                            border:1px solid #D4AF37 !important;
-                            font-weight:600;
-                        "
                     >
                         Resmi Yükle
                     </button>
 
                 </div>
 
-
-
-                <!-- MESAJ -->
 
                 <div
                     id="imageUploadMessage"
@@ -796,20 +698,15 @@
                     "
                 ></div>
 
-
             </div>
 
 
-
-            <!-- ==================================================
-                 YÜKLÜ RESİMLER
-            ================================================== -->
+            <!-- YÜKLÜ RESİMLER -->
 
             <div
                 class="content-box"
                 style="margin-top:20px;"
             >
-
 
                 <div class="list-header">
 
@@ -820,8 +717,7 @@
                         </h2>
 
                         <p>
-                            Sisteme yüklenen resimler burada
-                            görüntülenecek.
+                            Sisteme yüklenen resimler burada görüntülenecek.
                         </p>
 
                     </div>
@@ -837,7 +733,6 @@
                 </div>
 
 
-
                 <div
                     id="imageList"
                     style="
@@ -848,7 +743,6 @@
                         margin-top:20px;
                     "
                 >
-
 
                     <div class="empty-state">
 
@@ -861,20 +755,16 @@
                         </h2>
 
                         <p>
-                            Yukarıdaki alandan ilk resminizi
-                            yükleyebilirsiniz.
+                            Yukarıdaki alandan ilk resminizi yükleyebilirsiniz.
                         </p>
 
                     </div>
 
-
                 </div>
-
 
             </div>
 
         </section>
-
 
 
         <!-- ==================================================
@@ -885,7 +775,6 @@
             class="page"
             id="settingsPage"
         >
-
 
             <div class="page-header">
 
@@ -904,9 +793,7 @@
             </div>
 
 
-
             <div class="content-box">
-
 
                 <div class="empty-state">
 
@@ -919,12 +806,10 @@
                     </h2>
 
                     <p>
-                        Ayarlar bir sonraki aşamada
-                        aktif edilecek.
+                        Ayarlar bir sonraki aşamada aktif edilecek.
                     </p>
 
                 </div>
-
 
             </div>
 
@@ -932,15 +817,19 @@
 
 
     </main>
-    </main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="admin.js"></script>
 
 
-</div>
+    <!-- ==================================================
+         SUPABASE JS
+    ================================================== -->
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- ==================================================
+         ADMIN JS
+    ================================================== -->
+
+    <script src="admin.js"></script>
 
 </body>
 
