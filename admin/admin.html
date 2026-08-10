@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
 
     <meta charset="UTF-8">
@@ -10,10 +11,7 @@
     >
 
     <title>Sur Halı | Yönetim Paneli</title>
-<link
-    rel="icon"
-    href="data:,"
->
+
     <link
         rel="stylesheet"
         href="admin.css"
@@ -331,7 +329,7 @@
                         <input
                             type="text"
                             id="productName"
-                            placeholder="Örn. Modern Halı"
+                            placeholder="Örn. Sisal 2x290"
                             required
                         >
 
@@ -548,7 +546,7 @@
                 </h1>
 
                 <p>
-                    Site resimlerini buradan yönetin.
+                    Resimleri doğrudan ürünlere bağlayarak yönetin.
                 </p>
 
             </div>
@@ -567,13 +565,15 @@
                     </h2>
 
                     <p>
-                        Siteye eklemek istediğiniz resmi seçin.
+                        Önce kategoriyi, ardından ürünü seçin.
                     </p>
 
                 </div>
 
             </div>
 
+
+            <!-- RESİM DOSYASI -->
 
             <div class="form-group">
 
@@ -589,6 +589,8 @@
 
             </div>
 
+
+            <!-- KATEGORİ -->
 
             <div
                 class="form-group"
@@ -630,6 +632,33 @@
             </div>
 
 
+            <!-- ÜRÜN -->
+
+            <div
+                class="form-group"
+                style="margin-top:20px;"
+            >
+
+                <label for="imageProduct">
+                    Ürün
+                </label>
+
+                <select
+                    id="imageProduct"
+                    disabled
+                >
+
+                    <option value="">
+                        Önce kategori seçiniz
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ÖNİZLEME -->
+
             <div
                 id="imagePreviewBox"
                 style="
@@ -663,6 +692,8 @@
             </div>
 
 
+            <!-- YÜKLE -->
+
             <div
                 class="form-actions"
                 style="margin-top:25px;"
@@ -691,6 +722,8 @@
 
         </div>
 
+
+        <!-- YÜKLÜ RESİMLER -->
 
         <div
             class="content-box"
@@ -789,17 +822,20 @@
 
 
 <!-- =========================================================
-     SUPABASE JS
+     SUPABASE
+     
+     SADECE 1 KEZ
 ========================================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <!-- =========================================================
-     ADMİN JAVASCRIPT
+     ADMIN JAVASCRIPT
+     
+     SADECE 1 KEZ
 ========================================================= -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="admin.js?v=7"></script>
 
 </body>
