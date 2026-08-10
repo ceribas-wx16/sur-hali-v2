@@ -1,219 +1,182 @@
-
+/* ==========================================================
+   SUR HALI - ADMIN PANEL
+   Tam sürüm
+========================================================== */
 
 
 /* ==========================================================
-   SAYFA YÜKLENDİ
-   SUPABASE
+   SUPABASE AYARLARI
 ========================================================== */
 
-document.addEventListener("DOMContentLoaded", function () {
 const SUPABASE_URL =
     "https://lhltolrtgnfkbwfkpaex.supabase.co";
 
-    console.log("DOM hazır.");
 const SUPABASE_KEY =
     "sb_publishable_xdWMVRunvPSeiMw2vfGWyw_l6dTnBsn";
 
-    const loginForm =
-        document.getElementById("loginForm");
 
-if (!window.supabase) {
+/* ==========================================================
+   GLOBAL SUPABASE CLIENT
+========================================================== */
 
-    /* ======================================================
-       GİRİŞ SAYFASI
-    ====================================================== */
-    console.error(
-        "Supabase JS yüklenemedi."
-    );
+let supabaseClient = null;
 
-    if (loginForm) {
-} else {
-
-        console.log("Giriş sayfası bulundu.");
-    console.log(
-        "Supabase JS bulundu."
-    );
-
-        loginForm.addEventListener(
-            "submit",
-            girisYap
-}
-
-
-const supabaseClient =
-    window.supabase
-        ? window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        )
-        : null;
-
-
-console.log(
-    "supabaseClient:",
-    typeof supabaseClient
-);
+let duzenlenenUrunId = null;
 
 
 /* ==========================================================
-   SAYFA YÜKLENDİ
+   BAŞLANGIÇ
 ========================================================== */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
-        console.log(
-            "DOM hazır."
+    console.log("=================================");
+    console.log("Sur Halı Admin başlatılıyor...");
+    console.log("=================================");
+
+    if (!window.supabase) {
+
+        console.error(
+            "Supabase JS yüklenemedi."
         );
 
         return;
     }
 
-        const loginForm =
-            document.getElementById(
-                "loginForm"
+    try {
+
+        supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
             );
 
+        /*
+         * Eski kodların ve gerektiğinde diğer fonksiyonların
+         * erişebilmesi için global olarak da tanımlıyoruz.
+         */
+
+        window.supabaseClient =
+            supabaseClient;
+
+        console.log(
+            "Supabase bağlantısı hazır."
+        );
+
+        console.log(
+            "supabaseClient:",
+            typeof supabaseClient
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Supabase başlatma hatası:",
+            error
+        );
+
+        return;
+    }
+
+
+    console.log("DOM hazır.");
+
+
     /* ======================================================
-       ADMİN PANELİ
-       
-       ÖNEMLİ:
-       HTML'de .admin-container yok.
-       Sidebar + main-content var.
+       LOGIN SAYFASI KONTROLÜ
+    ====================================================== */
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+    if (loginForm) {
+
+        loginForm.addEventListener(
+            "submit",
+            girisYap
+        );
+
+        console.log(
+            "Giriş formu hazır."
+        );
+
+        return;
+    }
+
+
+    /* ======================================================
+       ADMIN PANELİ
     ====================================================== */
 
     const sidebar =
         document.querySelector(".sidebar");
-        /*
-         * Admin panelinde loginForm yok.
-         * Eğer aynı JS login sayfasında da kullanılıyorsa
-         * login işlemi burada çalışır.
-         */
 
     const mainContent =
         document.querySelector(".main-content");
-        if (loginForm) {
 
-            console.log(
-                "Giriş sayfası bulundu."
-            );
+    if (
+        sidebar &&
+        mainContent
+    ) {
 
-    if (sidebar && mainContent) {
-
-        console.log("Admin paneli bulundu.");
-            loginForm.addEventListener(
-                "submit",
-                girisYap
-            );
-
-        adminPanelBaslat();
-
-    } else {
-            return;
-        }
-
-        console.warn(
-            "Admin paneli HTML elemanları bulunamadı."
+        console.log(
+            "Admin paneli bulundu."
         );
 
+        await adminPanelBaslat();
+
+    } else {
+
+        console.warn(
+            "Admin panel elemanları bulunamadı."
+        );
     }
-        const sidebar =
-            document.querySelector(
-                ".sidebar"
-            );
-
-
-        const mainContent =
-            document.querySelector(
-                ".main-content"
-            );
-
-
-        if (
-            sidebar &&
-            mainContent
-        ) {
-
-            console.log(
-                "Admin paneli bulundu."
-            );
-
 
 });
-            adminPanelBaslat();
-
-        } else {
-
-            console.warn(
-                "Admin paneli HTML elemanları bulunamadı."
-            );
-
-        }
-
-    }
-);
 
 
 /* ==========================================================
-@@ -71,48 +128,68 @@ async function girisYap(e) {
+   LOGIN
+========================================================== */
+
+async function girisYap(e) {
 
     e.preventDefault();
 
-
     const emailElement =
         document.getElementById("email");
-        document.getElementById(
-            "email"
-        );
-
 
     const passwordElement =
         document.getElementById("password");
-        document.getElementById(
-            "password"
-        );
-
 
     const mesaj =
         document.getElementById("loginMessage");
-        document.getElementById(
-            "loginMessage"
-        );
 
 
-    if (!emailElement || !passwordElement) {
     if (
         !emailElement ||
         !passwordElement
     ) {
 
         return;
-
     }
 
 
     const email =
         emailElement.value.trim();
 
-
     const password =
         passwordElement.value;
 
 
     if (mesaj) {
-        mesaj.textContent = "";
 
-        mesaj.textContent =
-            "";
+        mesaj.textContent = "";
+        mesaj.style.display = "none";
 
     }
 
 
-    if (
-        typeof supabaseClient ===
-        "undefined"
-    ) {
     if (!supabaseClient) {
 
         if (mesaj) {
@@ -221,90 +184,132 @@ document.addEventListener(
             mesaj.textContent =
                 "Supabase bağlantısı kurulamadı.";
 
+            mesaj.style.display = "block";
         }
 
-
-        console.error(
-            "supabaseClient bulunamadı."
-        );
-
-
         return;
-
     }
 
 
-@@ -122,13 +199,12 @@ async function girisYap(e) {
+    try {
+
+        const {
             data,
             error
         } =
             await supabaseClient.auth.signInWithPassword({
-
                 email: email,
-
                 password: password
-
             });
-            await supabaseClient.auth.signInWithPassword(
-                {
-                    email: email,
-                    password: password
-                }
-            );
 
 
         if (error) {
-@@ -138,12 +214,17 @@ async function girisYap(e) {
+
+            console.error(
+                "Giriş hatası:",
                 error
             );
-
 
             if (mesaj) {
 
                 mesaj.textContent =
                     error.message;
 
+                mesaj.style.display =
+                    "block";
             }
 
-
             return;
-
         }
 
 
-@@ -190,20 +271,14 @@ async function adminPanelBaslat() {
+        if (!data || !data.session) {
+
+            if (mesaj) {
+
+                mesaj.textContent =
+                    "Giriş yapılamadı.";
+
+                mesaj.style.display =
+                    "block";
+            }
+
+            return;
+        }
+
+
+        /*
+         * Admin paneline geç.
+         */
+
+        window.location.href =
+            "admin.html";
+
+    } catch (error) {
+
+        console.error(
+            "Giriş sırasında hata:",
+            error
+        );
+
+        if (mesaj) {
+
+            mesaj.textContent =
+                "Giriş sırasında bir hata oluştu.";
+
+            mesaj.style.display =
+                "block";
+        }
+    }
+
+}
+
+
+/* ==========================================================
+   ADMIN PANELİ BAŞLAT
+========================================================== */
+
+async function adminPanelBaslat() {
+
+    console.log(
+        "Admin paneli başlatılıyor..."
     );
 
 
-    /* ======================================================
-       SUPABASE KONTROLÜ
-    ====================================================== */
-
-    if (
-        typeof supabaseClient ===
-        "undefined"
-    ) {
     if (!supabaseClient) {
 
         console.error(
-            "supabaseClient bulunamadı."
             "Supabase bağlantısı bulunamadı."
         );
 
         return;
-
     }
 
 
-@@ -228,19 +303,26 @@ async function adminPanelBaslat() {
+    /* ======================================================
+       OTURUM KONTROLÜ
+    ====================================================== */
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.getSession();
+
+
+        if (error) {
+
+            console.error(
+                "Oturum kontrol hatası:",
+                error
             );
 
             return;
-
         }
 
 
-        if (!data.session) {
         if (
             !data ||
             !data.session
@@ -314,133 +319,219 @@ document.addEventListener(
                 "Aktif oturum bulunamadı."
             );
 
+            /*
+             * Giriş sayfası gerçekten mevcutsa oraya git.
+             */
 
-            window.location.href =
-                "admin-login.html";
+            if (
+                window.location.pathname.includes(
+                    "/admin/"
+                )
+            ) {
 
-
-            return;
-
-        }
-
-
-@@ -259,6 +341,7 @@ async function adminPanelBaslat() {
-        );
-
-        return;
-
-    }
-
-
-@@ -296,23 +379,34 @@ async function adminPanelBaslat() {
-
-    function sayfaAc(pageId) {
-
-        if (!pageId) {
+                window.location.href =
+                    "admin-login.html";
+            }
 
             return;
-
         }
 
 
         console.log(
-            "Sayfa açılıyor:",
-            pageId
+            "Aktif admin oturumu bulundu."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Oturum kontrolü başarısız:",
+            error
+        );
+
+        return;
+    }
+
+
+    /* ======================================================
+       MENÜ
+    ====================================================== */
+
+    menuSisteminiBaslat();
+
+
+    /* ======================================================
+       ÜRÜNLER
+    ====================================================== */
+
+    urunSisteminiBaslat();
+
+
+    /* ======================================================
+       RESİMLER
+    ====================================================== */
+
+    resimSisteminiBaslat();
+
+
+    /* ======================================================
+       ÇIKIŞ
+    ====================================================== */
+
+    cikisSisteminiBaslat();
+
+
+    /* ======================================================
+       DASHBOARD
+    ====================================================== */
+
+    await dashboardGuncelle();
+
+
+    /* ======================================================
+       İLK ÜRÜNLER
+    ====================================================== */
+
+    await urunleriYukle();
+
+
+    /* ======================================================
+       İLK RESİMLER
+    ====================================================== */
+
+    await resimleriYukle();
+
+
+    console.log(
+        "================================="
+    );
+
+    console.log(
+        "Sur Halı Admin panel hazır."
+    );
+
+    console.log(
+        "================================="
+    );
+
+}
+
+
+/* ==========================================================
+   MENÜ SİSTEMİ
+========================================================== */
+
+function menuSisteminiBaslat() {
+
+    const menuItems =
+        document.querySelectorAll(
+            ".menu-item[data-page]"
         );
 
 
-        pages.forEach(function (page) {
-        pages.forEach(
-            function (page) {
-
-            page.classList.remove(
-                "active-page"
-            );
-                page.classList.remove(
-                    "active-page"
-                );
-
-        });
-            }
+    const pages =
+        document.querySelectorAll(
+            ".page"
         );
+
+
+    function sayfaAc(pageId) {
+
+        if (!pageId) {
+            return;
+        }
 
 
         const targetPage =
-            document.getElementById(pageId);
             document.getElementById(
                 pageId
             );
 
 
         if (!targetPage) {
-@@ -323,6 +417,7 @@ async function adminPanelBaslat() {
+
+            console.warn(
+                "Sayfa bulunamadı:",
+                pageId
             );
 
             return;
-
         }
 
 
-@@ -331,26 +426,28 @@ async function adminPanelBaslat() {
-        );
+        pages.forEach(function (page) {
+
+            page.classList.remove(
+                "active-page"
+            );
+
+        });
 
 
         menuItems.forEach(function (item) {
-        menuItems.forEach(
-            function (item) {
 
             item.classList.remove(
                 "active"
             );
-                item.classList.remove(
-                    "active"
-                );
 
+        });
+
+
+        targetPage.classList.add(
+            "active-page"
+        );
+
+
+        menuItems.forEach(function (item) {
 
             if (
                 item.getAttribute(
                     "data-page"
                 ) === pageId
             ) {
-                if (
-                    item.getAttribute(
-                        "data-page"
-                    ) === pageId
-                ) {
 
                 item.classList.add(
                     "active"
                 );
-                    item.classList.add(
-                        "active"
-                    );
 
             }
-                }
 
         });
-            }
-        );
+
+
+        /*
+         * Sayfa değiştirildiğinde ilgili veriyi yenile.
+         */
+
+        if (pageId === "productsPage") {
+
+            urunleriYukle();
+
+        }
+
+
+        if (pageId === "imagesPage") {
+
+            resimleriYukle();
+
+        }
+
+
+        if (pageId === "dashboardPage") {
+
+            dashboardGuncelle();
+
+        }
 
     }
 
-@@ -359,29 +456,35 @@ async function adminPanelBaslat() {
-       SOL MENÜ
-    ====================================================== */
 
     menuItems.forEach(function (menuItem) {
-    menuItems.forEach(
-        function (menuItem) {
 
         menuItem.addEventListener(
             "click",
             function (e) {
-            menuItem.addEventListener(
-                "click",
-                function (e) {
 
                 e.preventDefault();
-                    e.preventDefault();
 
                 const pageId =
                     menuItem.getAttribute(
@@ -448,527 +539,1021 @@ document.addEventListener(
                     );
 
                 sayfaAc(pageId);
-                    const pageId =
-                        menuItem.getAttribute(
-                            "data-page"
-                        );
 
             }
         );
 
     });
-                    sayfaAc(
-                        pageId
-                    );
-
-                }
-            );
-
-        }
-    );
 
 
-    /* ======================================================
-       DASHBOARD HIZLI BUTONLAR
-       HIZLI BUTONLAR
-    ====================================================== */
+    /*
+     * Dashboard hızlı işlem butonları.
+     */
 
     const quickButtons =
-@@ -390,23 +493,28 @@ async function adminPanelBaslat() {
+        document.querySelectorAll(
+            ".quick-actions [data-page]"
         );
 
 
     quickButtons.forEach(function (button) {
-    quickButtons.forEach(
-        function (button) {
 
         button.addEventListener(
             "click",
             function () {
-            button.addEventListener(
-                "click",
-                function () {
 
                 const pageId =
                     button.getAttribute(
                         "data-page"
                     );
-                    const pageId =
-                        button.getAttribute(
-                            "data-page"
-                        );
 
                 sayfaAc(pageId);
 
             }
         );
-                    sayfaAc(
-                        pageId
-                    );
 
     });
-                }
-            );
 
-        }
-    );
+}
 
 
-    /* ======================================================
-@@ -437,7 +545,8 @@ async function adminPanelBaslat() {
+/* ==========================================================
+   ÜRÜN SİSTEMİ
+========================================================== */
+
+function urunSisteminiBaslat() {
+
+    const newProductButton =
+        document.getElementById(
+            "newProductButton"
         );
 
 
-    let duzenlenenUrunId = null;
-    let duzenlenenUrunId =
-        null;
-
-
-    /* ======================================================
-@@ -453,12 +562,16 @@ async function adminPanelBaslat() {
-
-
-        if (message) {
-
-            return message;
-
-        }
-
-
-        if (!productForm) {
-
-            return null;
-
-        }
-
-
-@@ -508,7 +621,9 @@ async function adminPanelBaslat() {
-
-
-        if (!message) {
-
-            return;
-
-        }
-
-
-@@ -531,9 +646,7 @@ async function adminPanelBaslat() {
-            message.style.color =
-                "#246b36";
-
-        }
-
-        else {
-        } else {
-
-            message.style.border =
-                "1px solid #d9534f";
-@@ -562,6 +675,7 @@ async function adminPanelBaslat() {
-            message.textContent =
-                "";
-
-
-            message.style.display =
-                "none";
-
-@@ -588,7 +702,9 @@ async function adminPanelBaslat() {
-
-
-                if (productForm) {
-
-                    productForm.reset();
-
-                }
-
-
-@@ -633,10 +749,12 @@ async function adminPanelBaslat() {
-                formMesajiTemizle();
-
-
-                productFormBox.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-                productFormBox.scrollIntoView(
-                    {
-                        behavior: "smooth",
-                        block: "start"
-                    }
-                );
-
-            }
+    const productFormBox =
+        document.getElementById(
+            "productFormBox"
         );
-@@ -671,7 +789,9 @@ async function adminPanelBaslat() {
 
 
-                if (productForm) {
-
-                    productForm.reset();
-
-                }
-
-
-@@ -745,7 +865,9 @@ async function adminPanelBaslat() {
-                        false
-                    );
+    const productForm =
+        document.getElementById(
+            "productForm"
+        );
 
 
-                    return;
-
-                }
-
-
-@@ -788,9 +910,12 @@ async function adminPanelBaslat() {
-                        false
-                    );
+    const cancelProductButton =
+        document.getElementById(
+            "cancelProductButton"
+        );
 
 
-                    nameElement.focus();
+    const productFormTitle =
+        document.getElementById(
+            "productFormTitle"
+        );
 
 
-                    return;
-
-                }
-
-
-@@ -801,31 +926,43 @@ async function adminPanelBaslat() {
-                        false
-                    );
+    const saveProductButton =
+        document.getElementById(
+            "saveProductButton"
+        );
 
 
-                    categoryElement.focus();
+    /*
+     * YENİ ÜRÜN
+     */
 
+    if (newProductButton) {
 
-                    return;
+        newProductButton.addEventListener(
+            "click",
+            function () {
 
-                }
-
-
-                let price = null;
-                let price =
+                duzenlenenUrunId =
                     null;
 
 
-                if (priceText !== "") {
-                if (
-                    priceText !== ""
-                ) {
-
-                    price =
-                        Number(priceText);
-                        Number(
-                            priceText
-                        );
+                if (productForm) {
+                    productForm.reset();
+                }
 
 
-                    if (
-                        Number.isNaN(price)
-                        Number.isNaN(
-                            price
-                        )
-                    ) {
+                if (productFormTitle) {
 
-                        formMesajiGoster(
-                            "Fiyat bilgisi geçerli değil.",
-                            false
-                        );
-
-
-                        return;
-
-                    }
+                    productFormTitle.textContent =
+                        "Yeni Ürün Ekle";
 
                 }
-@@ -855,9 +992,11 @@ async function adminPanelBaslat() {
-
-                    const urunData = {
-
-                        name: name,
-                        name:
-                            name,
-
-                        category: category,
-                        category:
-                            category,
-
-                        size:
-                            size || null,
-@@ -875,7 +1014,7 @@ async function adminPanelBaslat() {
 
 
-                    /* ==========================================
-                       ÜRÜN GÜNCELLE
-                       GÜNCELLE
-                    ========================================== */
+                if (saveProductButton) {
 
-                    if (duzenlenenUrunId) {
-@@ -932,12 +1071,14 @@ async function adminPanelBaslat() {
-                        } =
-                            await supabaseClient
-                                .from("products")
-                                .insert([
-                                    {
-                                        ...urunData,
-                                        image_url: null
-                                    }
-                                ])
-                                .insert(
-                                    [
-                                        {
-                                            ...urunData,
-                                            image_url: null
-                                        }
-                                    ]
-                                )
-                                .select()
-                                .single();
+                    saveProductButton.textContent =
+                        "Ürünü Kaydet";
 
-@@ -970,7 +1111,9 @@ async function adminPanelBaslat() {
+                }
 
 
-                    if (productForm) {
-
-                        productForm.reset();
-
-                    }
+                formMesajiTemizle();
 
 
-@@ -1031,7 +1174,9 @@ async function adminPanelBaslat() {
+                if (productFormBox) {
+
+                    productFormBox.style.display =
+                        "block";
+
+                    productFormBox.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }
+
+            }
+        );
+
+    }
 
 
-                        saveButton.textContent =
-                            "Ürünü Kaydet";
-                            duzenlenenUrunId
-                                ? "Güncelle"
-                                : "Ürünü Kaydet";
+    /*
+     * VAZGEÇ
+     */
 
-                    }
+    if (cancelProductButton) {
 
-@@ -1062,7 +1207,9 @@ async function adminPanelBaslat() {
+        cancelProductButton.addEventListener(
+            "click",
+            function () {
+
+                duzenlenenUrunId =
+                    null;
 
 
-        if (!productList) {
+                if (productForm) {
+                    productForm.reset();
+                }
+
+
+                if (productFormTitle) {
+
+                    productFormTitle.textContent =
+                        "Yeni Ürün Ekle";
+
+                }
+
+
+                if (saveProductButton) {
+
+                    saveProductButton.textContent =
+                        "Ürünü Kaydet";
+
+                }
+
+
+                formMesajiTemizle();
+
+
+                if (productFormBox) {
+
+                    productFormBox.style.display =
+                        "none";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * ÜRÜN FORMU
+     */
+
+    if (productForm) {
+
+        productForm.addEventListener(
+            "submit",
+            async function (e) {
+
+                e.preventDefault();
+
+                await urunKaydet();
+
+            }
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   ÜRÜN KAYDET
+========================================================== */
+
+async function urunKaydet() {
+
+    if (!supabaseClient) {
+
+        formMesajiGoster(
+            "Supabase bağlantısı kurulamadı.",
+            false
+        );
+
+        return;
+    }
+
+
+    const nameElement =
+        document.getElementById(
+            "productName"
+        );
+
+
+    const categoryElement =
+        document.getElementById(
+            "productCategory"
+        );
+
+
+    const sizeElement =
+        document.getElementById(
+            "productSize"
+        );
+
+
+    const priceElement =
+        document.getElementById(
+            "productPrice"
+        );
+
+
+    const descriptionElement =
+        document.getElementById(
+            "productDescription"
+        );
+
+
+    const activeElement =
+        document.getElementById(
+            "productActive"
+        );
+
+
+    const saveButton =
+        document.getElementById(
+            "saveProductButton"
+        );
+
+
+    if (!nameElement) {
+        return;
+    }
+
+
+    const name =
+        nameElement.value.trim();
+
+
+    const category =
+        categoryElement
+            ? categoryElement.value.trim()
+            : "";
+
+
+    const size =
+        sizeElement
+            ? sizeElement.value.trim()
+            : "";
+
+
+    const priceText =
+        priceElement
+            ? priceElement.value.trim()
+            : "";
+
+
+    const description =
+        descriptionElement
+            ? descriptionElement.value.trim()
+            : "";
+
+
+    const active =
+        activeElement
+            ? activeElement.value === "true"
+            : true;
+
+
+    /* ======================================================
+       KONTROLLER
+    ====================================================== */
+
+    if (!name) {
+
+        formMesajiGoster(
+            "Lütfen ürün adını girin.",
+            false
+        );
+
+        nameElement.focus();
+
+        return;
+    }
+
+
+    if (!category) {
+
+        formMesajiGoster(
+            "Lütfen kategori seçin.",
+            false
+        );
+
+        if (categoryElement) {
+            categoryElement.focus();
+        }
+
+        return;
+    }
+
+
+    let price = null;
+
+
+    if (priceText !== "") {
+
+        price =
+            Number(
+                priceText.replace(
+                    ",",
+                    "."
+                )
+            );
+
+
+        if (
+            Number.isNaN(price)
+        ) {
+
+            formMesajiGoster(
+                "Fiyat bilgisi geçerli değil.",
+                false
+            );
 
             return;
+        }
+
+    }
+
+
+    /*
+     * Butonu kilitle.
+     */
+
+    if (saveButton) {
+
+        saveButton.disabled =
+            true;
+
+        saveButton.textContent =
+            duzenlenenUrunId
+                ? "Güncelleniyor..."
+                : "Kaydediliyor...";
+
+    }
+
+
+    try {
+
+        const urunData = {
+
+            name: name,
+
+            category: category,
+
+            size:
+                size || null,
+
+            price:
+                price,
+
+            description:
+                description || null,
+
+            active:
+                active
+
+        };
+
+
+        /* ==================================================
+           GÜNCELLE
+        ================================================== */
+
+        if (duzenlenenUrunId) {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("products")
+                    .update(
+                        urunData
+                    )
+                    .eq(
+                        "id",
+                        duzenlenenUrunId
+                    )
+                    .select()
+                    .single();
+
+
+            if (error) {
+
+                throw error;
+            }
+
+
+            console.log(
+                "Ürün güncellendi:",
+                data
+            );
+
+
+            formMesajiGoster(
+                "Ürün başarıyla güncellendi.",
+                true
+            );
+
+        }
+
+        /* ==================================================
+           YENİ ÜRÜN
+        ================================================== */
+
+        else {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("products")
+                    .insert([
+                        {
+                            ...urunData,
+                            image_url: null
+                        }
+                    ])
+                    .select()
+                    .single();
+
+
+            if (error) {
+
+                throw error;
+            }
+
+
+            console.log(
+                "Ürün eklendi:",
+                data
+            );
+
+
+            formMesajiGoster(
+                "Ürün başarıyla eklendi.",
+                true
+            );
 
         }
 
 
-@@ -1085,44 +1232,10 @@ async function adminPanelBaslat() {
+        /*
+         * Formu temizle.
+         */
 
-            if (error) {
-
-                console.error(
-                    "Ürünler alınamadı:",
-                    error
-                throw new Error(
-                    error.message
-                );
+        const productForm =
+            document.getElementById(
+                "productForm"
+            );
 
 
-                productList.innerHTML = `
+        if (productForm) {
 
-                    <div class="empty-state">
+            productForm.reset();
 
-                        <div class="empty-icon">
-                            !
-                        </div>
-
-                        <h2>
-                            Ürünler yüklenemedi
-                        </h2>
-
-                        <p>
-                            ${escapeHTML(
-                                error.message
-                            )}
-                        </p>
-
-                    </div>
-
-                `;
+        }
 
 
-                if (productCount) {
-
-                    productCount.textContent =
-                        "0 ürün";
-
-                }
+        duzenlenenUrunId =
+            null;
 
 
-                return;
-            }
+        const productFormTitle =
+            document.getElementById(
+                "productFormTitle"
+            );
 
 
-@@ -1162,6 +1275,7 @@ async function adminPanelBaslat() {
+        if (productFormTitle) {
+
+            productFormTitle.textContent =
+                "Yeni Ürün Ekle";
+
+        }
 
 
-                return;
+        if (saveButton) {
 
-            }
+            saveButton.textContent =
+                "Ürünü Kaydet";
 
-
-@@ -1209,9 +1323,7 @@ async function adminPanelBaslat() {
-
-                            <div
-                                class="product-item"
-                                data-product-id="${escapeHTML(
-                                    product.id
-                                )}"
-                                data-product-id="${escapeHTML(product.id)}"
-                                style="
-                                    display:flex;
-                                    justify-content:space-between;
-@@ -1226,23 +1338,17 @@ async function adminPanelBaslat() {
-                                >
-
-                                    <h3>
-                                        ${escapeHTML(
-                                            product.name
-                                        )}
-                                        ${escapeHTML(product.name)}
-                                    </h3>
-
-                                    <p>
-                                        <strong>Kategori:</strong>
-                                        ${escapeHTML(
-                                            product.category || "-"
-                                        )}
-                                        ${escapeHTML(product.category || "-")}
-                                    </p>
-
-                                    <p>
-                                        <strong>Ölçü:</strong>
-                                        ${escapeHTML(
-                                            product.size || "-"
-                                        )}
-                                        ${escapeHTML(product.size || "-")}
-                                    </p>
-
-                                    <p>
-@@ -1294,14 +1400,11 @@ async function adminPanelBaslat() {
-                                        <button
-                                            type="button"
-                                            class="outline-button edit-product-button"
-                                            data-id="${escapeHTML(
-                                                product.id
-                                            )}"
-                                            data-id="${escapeHTML(product.id)}"
-                                            style="
-                                                padding:8px 12px;
-                                                cursor:pointer;
-                                                color:#D4AF37 !important;
-                                                -webkit-text-fill-color:#D4AF37 !important;
-                                                border:1px solid #D4AF37 !important;
-                                                background:transparent !important;
-                                                border-radius:6px;
-@@ -1315,9 +1418,7 @@ async function adminPanelBaslat() {
-                                        <button
-                                            type="button"
-                                            class="delete-product-button"
-                                            data-id="${escapeHTML(
-                                                product.id
-                                            )}"
-                                            data-id="${escapeHTML(product.id)}"
-                                            style="
-                                                padding:8px 14px;
-                                                cursor:pointer;
-@@ -1343,9 +1444,9 @@ async function adminPanelBaslat() {
-                ).join("");
+        }
 
 
-            /* ==============================================
-            /* ==================================================
-               DÜZENLE
-            ============================================== */
-            ================================================== */
+        /*
+         * Listeyi ve dashboard'u yenile.
+         */
 
-            productList
-                .querySelectorAll(
-@@ -1383,7 +1484,9 @@ async function adminPanelBaslat() {
-                                        "Ürün bulunamadı."
-                                    );
+        await urunleriYukle();
+
+        await dashboardGuncelle();
 
 
-                                    return;
+    } catch (error) {
 
-                                }
-
-
-@@ -1398,9 +1501,9 @@ async function adminPanelBaslat() {
-                );
-
-
-            /* ==============================================
-            /* ==================================================
-               SİL
-            ============================================== */
-            ================================================== */
-
-            productList
-                .querySelectorAll(
-@@ -1438,7 +1541,9 @@ async function adminPanelBaslat() {
-                                        "Ürün bulunamadı."
-                                    );
+        console.error(
+            "Ürün kayıt hatası:",
+            error
+        );
 
 
-                                    return;
+        formMesajiGoster(
+            "Ürün kaydedilemedi: " +
+            (error.message || error),
+            false
+        );
 
-                                }
+    } finally {
 
+        if (saveButton) {
 
-@@ -1451,7 +1556,9 @@ async function adminPanelBaslat() {
+            saveButton.disabled =
+                false;
 
-
-                                if (!onay) {
-
-                                    return;
-
-                                }
-
-
-@@ -1545,19 +1652,25 @@ async function adminPanelBaslat() {
-                    </div>
-
-                    <h2>
-                        Hata oluştu
-                        Ürünler yüklenemedi
-                    </h2>
-
-                    <p>
-                        ${escapeHTML(
-                            error.message
-                        )}
-                        ${escapeHTML(error.message)}
-                    </p>
-
-                </div>
-
-            `;
-
-
-            if (productCount) {
-
-                productCount.textContent =
-                    "0 ürün";
-
-            }
+            saveButton.textContent =
+                duzenlenenUrunId
+                    ? "Güncelle"
+                    : "Ürünü Kaydet";
 
         }
 
     }
-@@ -1576,7 +1689,9 @@ async function adminPanelBaslat() {
-            !productFormBox ||
-            !newProductButton
-        ) {
 
-            return;
+}
+
+
+/* ==========================================================
+   ÜRÜNLERİ YÜKLE
+========================================================== */
+
+async function urunleriYukle() {
+
+    const productList =
+        document.getElementById(
+            "productList"
+        );
+
+
+    const productCount =
+        document.getElementById(
+            "productCount"
+        );
+
+
+    if (!productList) {
+        return;
+    }
+
+
+    productList.innerHTML =
+        `
+        <div class="empty-state">
+            <p>Ürünler yükleniyor...</p>
+        </div>
+        `;
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("products")
+                .select("*");
+
+
+        if (error) {
+
+            throw error;
+        }
+
+
+        const products =
+            data || [];
+
+
+        if (productCount) {
+
+            productCount.textContent =
+                products.length +
+                " ürün";
 
         }
 
 
-@@ -1621,20 +1736,26 @@ async function adminPanelBaslat() {
+        if (products.length === 0) {
+
+            productList.innerHTML =
+                `
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ▤
+                    </div>
+
+                    <h2>
+                        Henüz ürün yok
+                    </h2>
+
+                    <p>
+                        "+ Yeni Ürün" butonunu kullanarak ilk ürünü ekleyebilirsiniz.
+                    </p>
+
+                </div>
+                `;
+
+            return;
+        }
+
+
+        productList.innerHTML =
+            products
+                .map(function (product) {
+
+                    return `
+                    <div
+                        class="product-item"
+                        data-product-id="${escapeHTML(product.id)}"
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:20px;
+                            padding:18px;
+                            margin-bottom:12px;
+                            border:1px solid rgba(212,175,55,.25);
+                            border-radius:10px;
+                            background:#111;
+                        "
+                    >
+
+                        <div style="flex:1;">
+
+                            <h3
+                                style="
+                                    margin:0 0 8px 0;
+                                    color:#D4AF37;
+                                "
+                            >
+                                ${escapeHTML(
+                                    product.name || "-"
+                                )}
+                            </h3>
+
+                            <p style="margin:5px 0;">
+                                <strong>Kategori:</strong>
+                                ${escapeHTML(
+                                    product.category || "-"
+                                )}
+                            </p>
+
+                            <p style="margin:5px 0;">
+                                <strong>Ölçü:</strong>
+                                ${escapeHTML(
+                                    product.size || "-"
+                                )}
+                            </p>
+
+                            <p style="margin:5px 0;">
+                                <strong>Fiyat:</strong>
+                                ${
+                                    product.price !== null &&
+                                    product.price !== undefined
+                                        ? Number(
+                                            product.price
+                                          ).toLocaleString(
+                                            "tr-TR",
+                                            {
+                                                minimumFractionDigits: 0,
+                                                maximumFractionDigits: 2
+                                            }
+                                          ) + " TL"
+                                        : "-"
+                                }
+                            </p>
+
+                            <p style="margin:5px 0;">
+                                <strong>Durum:</strong>
+
+                                <span
+                                    style="
+                                        color:${
+                                            product.active
+                                                ? "#55b86a"
+                                                : "#d9534f"
+                                        };
+                                    "
+                                >
+                                    ${
+                                        product.active
+                                            ? "Aktif"
+                                            : "Pasif"
+                                    }
+                                </span>
+
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            style="
+                                display:flex;
+                                gap:8px;
+                                flex-wrap:wrap;
+                            "
+                        >
+
+                            <button
+                                type="button"
+                                class="outline-button edit-product-button"
+                                data-id="${escapeHTML(product.id)}"
+                                style="
+                                    padding:8px 12px;
+                                    cursor:pointer;
+                                    color:#D4AF37 !important;
+                                    -webkit-text-fill-color:#D4AF37 !important;
+                                    border:1px solid #D4AF37 !important;
+                                    background:transparent !important;
+                                    border-radius:6px;
+                                "
+                            >
+                                Düzenle
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="delete-product-button"
+                                data-id="${escapeHTML(product.id)}"
+                                style="
+                                    padding:8px 14px;
+                                    cursor:pointer;
+                                    color:#fff !important;
+                                    border:1px solid #d9534f !important;
+                                    background:#8b1e1e !important;
+                                    border-radius:6px;
+                                "
+                            >
+                                Sil
+                            </button>
+
+                        </div>
+
+                    </div>
+                    `;
+
+                })
+                .join("");
+
+
+        /*
+         * DÜZENLE
+         */
+
+        productList
+            .querySelectorAll(
+                ".edit-product-button"
+            )
+            .forEach(function (button) {
+
+                button.addEventListener(
+                    "click",
+                    async function () {
+
+                        const id =
+                            button.getAttribute(
+                                "data-id"
+                            );
+
+                        await urunDuzenle(
+                            id
+                        );
+
+                    }
+                );
+
+            });
+
+
+        /*
+         * SİL
+         */
+
+        productList
+            .querySelectorAll(
+                ".delete-product-button"
+            )
+            .forEach(function (button) {
+
+                button.addEventListener(
+                    "click",
+                    async function () {
+
+                        const id =
+                            button.getAttribute(
+                                "data-id"
+                            );
+
+
+                        const onay =
+                            confirm(
+                                "Bu ürünü silmek istediğinize emin misiniz?"
+                            );
+
+
+                        if (!onay) {
+                            return;
+                        }
+
+
+                        await urunSil(
+                            id
+                        );
+
+                    }
+                );
+
+            });
+
+
+    } catch (error) {
+
+        console.error(
+            "Ürünler alınamadı:",
+            error
+        );
+
+
+        productList.innerHTML =
+            `
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    !
+                </div>
+
+                <h2>
+                    Ürünler yüklenemedi
+                </h2>
+
+                <p>
+                    ${escapeHTML(
+                        error.message ||
+                        "Bilinmeyen hata"
+                    )}
+                </p>
+
+            </div>
+            `;
+
+
+        if (productCount) {
+
+            productCount.textContent =
+                "0 ürün";
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================================
+   ÜRÜN DÜZENLE
+========================================================== */
+
+async function urunDuzenle(id) {
+
+    if (!id) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            data: product,
+            error
+        } =
+            await supabaseClient
+                .from("products")
+                .select("*")
+                .eq(
+                    "id",
+                    id
+                )
+                .single();
+
+
+        if (error) {
+
+            throw error;
+        }
+
+
+        if (!product) {
+
+            alert(
+                "Ürün bulunamadı."
+            );
+
+            return;
+        }
+
+
+        duzenlenenUrunId =
+            id;
+
+
+        const productFormBox =
+            document.getElementById(
+                "productFormBox"
+            );
+
+
+        const productFormTitle =
+            document.getElementById(
+                "productFormTitle"
+            );
+
+
+        const saveButton =
+            document.getElementById(
+                "saveProductButton"
+            );
+
+
+        const nameElement =
+            document.getElementById(
+                "productName"
+            );
+
+
+        const categoryElement =
+            document.getElementById(
+                "productCategory"
+            );
+
+
+        const sizeElement =
+            document.getElementById(
+                "productSize"
+            );
+
+
+        const priceElement =
+            document.getElementById(
+                "productPrice"
+            );
+
+
+        const descriptionElement =
+            document.getElementById(
+                "productDescription"
+            );
+
+
+        const activeElement =
+            document.getElementById(
+                "productActive"
+            );
 
 
         if (nameElement) {
@@ -995,502 +1580,1516 @@ document.addEventListener(
         }
 
 
-@@ -1706,10 +1827,12 @@ async function adminPanelBaslat() {
-            "none";
+        if (priceElement) {
 
-
-        productFormBox.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-        productFormBox.scrollIntoView(
-            {
-                behavior: "smooth",
-                block: "start"
-            }
-        );
-
-    }
-
-@@ -1763,9 +1886,7 @@ async function adminPanelBaslat() {
-
-        try {
-
-            /* ==============================================
-               TOPLAM ÜRÜN
-            ============================================== */
-            /* TOPLAM ÜRÜN */
-
-            const {
-                count: totalCount,
-@@ -1798,9 +1919,7 @@ async function adminPanelBaslat() {
-            }
-
-
-            /* ==============================================
-               AKTİF ÜRÜN
-            ============================================== */
-            /* AKTİF ÜRÜN */
-
-            const {
-                count: activeCount,
-@@ -1837,9 +1956,7 @@ async function adminPanelBaslat() {
-            }
-
-
-            /* ==============================================
-               RESİM SAYISI
-            ============================================== */
-            /* RESİM SAYISI */
-
-            const {
-                count: imageCount,
-@@ -1872,9 +1989,7 @@ async function adminPanelBaslat() {
-            }
-
-
-            /* ==============================================
-               STORAGE
-            ============================================== */
-            /* STORAGE */
-
-            const storageUsage =
-                document.getElementById(
-@@ -1948,13 +2063,15 @@ async function adminPanelBaslat() {
-                "Resim yönetimi elemanları bulunamadı."
-            );
-
-
-            return;
+            priceElement.value =
+                product.price ?? "";
 
         }
 
 
-        /* ==============================================
-        /* ==================================================
-           ÖNİZLEME
-        ============================================== */
-        ================================================== */
+        if (descriptionElement) {
+
+            descriptionElement.value =
+                product.description || "";
+
+        }
+
+
+        if (activeElement) {
+
+            activeElement.value =
+                product.active
+                    ? "true"
+                    : "false";
+
+        }
+
+
+        if (productFormTitle) {
+
+            productFormTitle.textContent =
+                "Ürünü Düzenle";
+
+        }
+
+
+        if (saveButton) {
+
+            saveButton.textContent =
+                "Güncelle";
+
+        }
+
+
+        formMesajiTemizle();
+
+
+        if (productFormBox) {
+
+            productFormBox.style.display =
+                "block";
+
+            productFormBox.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Ürün alınamadı:",
+            error
+        );
+
+
+        alert(
+            "Ürün bilgileri alınamadı:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   ÜRÜN SİL
+========================================================== */
+
+async function urunSil(id) {
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("products")
+                .delete()
+                .eq(
+                    "id",
+                    id
+                );
+
+
+        if (error) {
+
+            throw error;
+        }
+
+
+        alert(
+            "Ürün başarıyla silindi."
+        );
+
+
+        await urunleriYukle();
+
+        await dashboardGuncelle();
+
+
+    } catch (error) {
+
+        console.error(
+            "Ürün silme hatası:",
+            error
+        );
+
+
+        alert(
+            "Ürün silinemedi:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   FORM MESAJI
+========================================================== */
+
+function formMesajiGoster(
+    message,
+    success
+) {
+
+    const element =
+        document.getElementById(
+            "productFormMessage"
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.style.display =
+        "block";
+
+
+    element.style.border =
+        success
+            ? "1px solid #246b36"
+            : "1px solid #d9534f";
+
+
+    element.style.color =
+        success
+            ? "#8ee6a1"
+            : "#ff8a8a";
+
+
+    element.style.background =
+        success
+            ? "rgba(36,107,54,.15)"
+            : "rgba(217,83,79,.15)";
+
+}
+
+
+function formMesajiTemizle() {
+
+    const element =
+        document.getElementById(
+            "productFormMessage"
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        "";
+
+    element.style.display =
+        "none";
+
+}
+
+
+/* ==========================================================
+   DASHBOARD
+========================================================== */
+
+async function dashboardGuncelle() {
+
+    if (!supabaseClient) {
+        return;
+    }
+
+
+    try {
+
+        /*
+         * TOPLAM ÜRÜN
+         */
+
+        const {
+            count: totalCount,
+            error: totalError
+        } =
+            await supabaseClient
+                .from("products")
+                .select(
+                    "*",
+                    {
+                        count: "exact",
+                        head: true
+                    }
+                );
+
+
+        if (
+            !totalError
+        ) {
+
+            const totalElement =
+                document.getElementById(
+                    "totalProducts"
+                );
+
+
+            if (totalElement) {
+
+                totalElement.textContent =
+                    totalCount ?? 0;
+
+            }
+
+        }
+
+
+        /*
+         * AKTİF ÜRÜN
+         */
+
+        const {
+            count: activeCount,
+            error: activeError
+        } =
+            await supabaseClient
+                .from("products")
+                .select(
+                    "*",
+                    {
+                        count: "exact",
+                        head: true
+                    }
+                )
+                .eq(
+                    "active",
+                    true
+                );
+
+
+        if (
+            !activeError
+        ) {
+
+            const activeElement =
+                document.getElementById(
+                    "activeProducts"
+                );
+
+
+            if (activeElement) {
+
+                activeElement.textContent =
+                    activeCount ?? 0;
+
+            }
+
+        }
+
+
+        /*
+         * TOPLAM RESİM
+         */
+
+        const {
+            count: imageCount,
+            error: imageError
+        } =
+            await supabaseClient
+                .from("category_images")
+                .select(
+                    "*",
+                    {
+                        count: "exact",
+                        head: true
+                    }
+                );
+
+
+        if (
+            !imageError
+        ) {
+
+            const imageElement =
+                document.getElementById(
+                    "totalImages"
+                );
+
+
+            if (imageElement) {
+
+                imageElement.textContent =
+                    imageCount ?? 0;
+
+            }
+
+        }
+
+
+        /*
+         * STORAGE
+         *
+         * Supabase JS ile storage kullanım boyutu
+         * doğrudan alınamadığı için şimdilik güvenli
+         * şekilde göstergeyi koruyoruz.
+         */
+
+        const storageElement =
+            document.getElementById(
+                "storageUsage"
+            );
+
+
+        if (storageElement) {
+
+            storageElement.textContent =
+                "Aktif";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard hatası:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   RESİM SİSTEMİ
+========================================================== */
+
+function resimSisteminiBaslat() {
+
+    const imageFile =
+        document.getElementById(
+            "imageFile"
+        );
+
+
+    const imageCategory =
+        document.getElementById(
+            "imageCategory"
+        );
+
+
+    const imagePreviewBox =
+        document.getElementById(
+            "imagePreviewBox"
+        );
+
+
+    const imagePreview =
+        document.getElementById(
+            "imagePreview"
+        );
+
+
+    const uploadImageButton =
+        document.getElementById(
+            "uploadImageButton"
+        );
+
+
+    /*
+     * RESİM SEÇİLİNCE ÖNİZLEME
+     */
+
+    if (
+        imageFile &&
+        imagePreview
+    ) {
 
         imageFile.addEventListener(
             "change",
-@@ -1974,7 +2091,9 @@ async function adminPanelBaslat() {
+            function () {
+
+                const file =
+                    imageFile.files[0];
+
+
+                if (!file) {
+
+                    if (imagePreviewBox) {
+
+                        imagePreviewBox.style.display =
+                            "none";
 
                     }
 
-
                     return;
-
                 }
 
 
-@@ -1987,12 +2106,15 @@ async function adminPanelBaslat() {
-                    imageFile.value =
-                        "";
-
+                if (
+                    !file.type.startsWith(
+                        "image/"
+                    )
+                ) {
 
                     imageMesajiGoster(
                         "Lütfen geçerli bir resim dosyası seçin.",
                         false
                     );
 
+                    imageFile.value =
+                        "";
 
                     return;
-
                 }
 
 
-@@ -2024,9 +2146,9 @@ async function adminPanelBaslat() {
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (e) {
+
+                        imagePreview.src =
+                            e.target.result;
+
+
+                        if (imagePreviewBox) {
+
+                            imagePreviewBox.style.display =
+                                "block";
+
+                        }
+
+                    };
+
+
+                reader.readAsDataURL(
+                    file
+                );
+
+            }
         );
 
+    }
 
-        /* ==============================================
-        /* ==================================================
-           RESİM YÜKLE
-        ============================================== */
-        ================================================== */
+
+    /*
+     * RESİM YÜKLE
+     */
+
+    if (uploadImageButton) {
 
         uploadImageButton.addEventListener(
             "click",
-@@ -2050,7 +2172,9 @@ async function adminPanelBaslat() {
-                        false
-                    );
+            async function () {
+
+                await resimYukle();
+
+            }
+        );
+
+    }
+
+}
 
 
-                    return;
+/* ==========================================================
+   RESİM YÜKLE
+========================================================== */
 
-                }
+async function resimYukle() {
+
+    const imageFile =
+        document.getElementById(
+            "imageFile"
+        );
 
 
-@@ -2061,11 +2185,16 @@ async function adminPanelBaslat() {
-                        false
-                    );
+    const imageCategory =
+        document.getElementById(
+            "imageCategory"
+        );
 
 
-                    if (imageCategory) {
+    const uploadButton =
+        document.getElementById(
+            "uploadImageButton"
+        );
 
-                        imageCategory.focus();
 
+    if (!imageFile) {
+        return;
+    }
+
+
+    const file =
+        imageFile.files[0];
+
+
+    if (!file) {
+
+        imageMesajiGoster(
+            "Lütfen bir resim seçin.",
+            false
+        );
+
+        return;
+    }
+
+
+    const category =
+        imageCategory
+            ? imageCategory.value.trim()
+            : "";
+
+
+    if (!category) {
+
+        imageMesajiGoster(
+            "Lütfen resim kategorisi seçin.",
+            false
+        );
+
+        if (imageCategory) {
+            imageCategory.focus();
+        }
+
+        return;
+    }
+
+
+    /*
+     * Dosya tipi
+     */
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/jpg"
+    ];
+
+
+    if (
+        !allowedTypes.includes(
+            file.type
+        )
+    ) {
+
+        imageMesajiGoster(
+            "Sadece JPG, PNG veya WEBP resim yükleyebilirsiniz.",
+            false
+        );
+
+        return;
+    }
+
+
+    /*
+     * Maksimum 10 MB
+     */
+
+    if (
+        file.size >
+        10 * 1024 * 1024
+    ) {
+
+        imageMesajiGoster(
+            "Resim boyutu en fazla 10 MB olabilir.",
+            false
+        );
+
+        return;
+    }
+
+
+    if (uploadButton) {
+
+        uploadButton.disabled =
+            true;
+
+        uploadButton.textContent =
+            "Yükleniyor...";
+
+    }
+
+
+    try {
+
+        /*
+         * Güvenli dosya adı
+         */
+
+        const extension =
+            dosyaUzantisi(
+                file.name
+            );
+
+
+        const temizKategori =
+            category
+                .toLowerCase()
+                .replace(
+                    /[^a-z0-9çğıöşü]+/gi,
+                    "-"
+                )
+                .replace(
+                    /-+/g,
+                    "-"
+                )
+                .replace(
+                    /^-|$/g,
+                    ""
+                );
+
+
+        const randomPart =
+            Math.random()
+                .toString(36)
+                .substring(
+                    2,
+                    10
+                );
+
+
+        const filePath =
+            temizKategori +
+            "/" +
+            Date.now() +
+            "-" +
+            randomPart +
+            "." +
+            extension;
+
+
+        console.log(
+            "Resim yükleniyor:",
+            filePath
+        );
+
+
+        /*
+         * STORAGE
+         */
+
+        const {
+            error: uploadError
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    "category-images"
+                )
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        cacheControl:
+                            "3600",
+                        upsert:
+                            false,
+                        contentType:
+                            file.type
                     }
+                );
 
 
-                    return;
+        if (uploadError) {
 
-                }
-
-
-@@ -2080,7 +2209,9 @@ async function adminPanelBaslat() {
-                        false
-                    );
+            throw uploadError;
+        }
 
 
-                    return;
+        /*
+         * PUBLIC URL
+         */
 
-                }
+        const {
+            data:
+                publicUrlData
+        } =
+            supabaseClient
+                .storage
+                .from(
+                    "category-images"
+                )
+                .getPublicUrl(
+                    filePath
+                );
 
 
-@@ -2097,7 +2228,9 @@ async function adminPanelBaslat() {
-                        false
-                    );
+        const imageUrl =
+            publicUrlData &&
+            publicUrlData.publicUrl
+                ? publicUrlData.publicUrl
+                : null;
 
 
-                    return;
+        /*
+         * DATABASE
+         */
 
-                }
+        const {
+            data:
+                imageRecord,
+            error:
+                databaseError
+        } =
+            await supabaseClient
+                .from(
+                    "category_images"
+                )
+                .insert([
+                    {
+                        category:
+                            category,
 
+                        image_path:
+                            filePath,
 
-@@ -2145,9 +2278,7 @@ async function adminPanelBaslat() {
-                        extension;
-
-
-                    /* ==========================================
-                       STORAGE
-                    ========================================== */
-                    /* STORAGE */
-
-                    const {
-                        error: uploadError
-@@ -2181,13 +2312,10 @@ async function adminPanelBaslat() {
+                        image_url:
+                            imageUrl
                     }
+                ])
+                .select()
+                .single();
 
 
-                    /* ==========================================
-                       PUBLIC URL
-                    ========================================== */
-                    /* PUBLIC URL */
+        if (databaseError) {
 
-                    const {
-                        data:
-                            publicUrlData
-                        data: publicUrlData
-                    } =
-                        supabaseClient
-                            .storage
-@@ -2206,32 +2334,30 @@ async function adminPanelBaslat() {
-                            : null;
+            /*
+             * Database kayıt olmazsa
+             * storage dosyasını da sil.
+             */
 
-
-                    /* ==========================================
-                       DATABASE
-                    ========================================== */
-                    /* DATABASE */
-
-                    const {
-                        data:
-                            imageRecord,
-                        error:
-                            databaseError
-                        data: imageRecord,
-                        error: databaseError
-                    } =
-                        await supabaseClient
-                            .from(
-                                "category_images"
-                            )
-                            .insert([
-                                {
-                                    category:
-                                        category,
-                            .insert(
-                                [
-                                    {
-                                        category:
-                                            category,
-
-                                    image_path:
-                                        filePath,
-                                        image_path:
-                                            filePath,
-
-                                    image_url:
-                                        imageUrl
-                                }
-                            ])
-                                        image_url:
-                                            imageUrl
-                                    }
-                                ]
-                            )
-                            .select()
-                            .single();
-
-@@ -2243,9 +2369,11 @@ async function adminPanelBaslat() {
-                            .from(
-                                "category-images"
-                            )
-                            .remove([
-                                filePath
-                            ]);
-                            .remove(
-                                [
-                                    filePath
-                                ]
-                            );
+            await supabaseClient
+                .storage
+                .from(
+                    "category-images"
+                )
+                .remove([
+                    filePath
+                ]);
 
 
-                        throw new Error(
-@@ -2357,7 +2485,9 @@ async function adminPanelBaslat() {
+            throw databaseError;
+        }
 
 
-        if (!imageList) {
+        console.log(
+            "Resim başarıyla yüklendi:",
+            imageRecord
+        );
 
-            return;
+
+        imageMesajiGoster(
+            "Resim başarıyla yüklendi.",
+            true
+        );
+
+
+        /*
+         * Form temizle
+         */
+
+        imageFile.value =
+            "";
+
+
+        if (imageCategory) {
+
+            imageCategory.value =
+                "";
 
         }
 
 
-@@ -2382,44 +2512,10 @@ async function adminPanelBaslat() {
-
-            if (error) {
-
-                console.error(
-                    "Resimler alınamadı:",
-                    error
-                throw new Error(
-                    error.message
-                );
+        const imagePreviewBox =
+            document.getElementById(
+                "imagePreviewBox"
+            );
 
 
-                imageList.innerHTML = `
-
-                    <div class="empty-state">
-
-                        <div class="empty-icon">
-                            !
-                        </div>
-
-                        <h2>
-                            Resimler yüklenemedi
-                        </h2>
-
-                        <p>
-                            ${escapeHTML(
-                                error.message
-                            )}
-                        </p>
-
-                    </div>
-
-                `;
+        const imagePreview =
+            document.getElementById(
+                "imagePreview"
+            );
 
 
-                if (imageCount) {
+        if (imagePreviewBox) {
 
-                    imageCount.textContent =
-                        "0 resim";
+            imagePreviewBox.style.display =
+                "none";
 
-                }
-
-
-                return;
-            }
+        }
 
 
-@@ -2459,6 +2555,7 @@ async function adminPanelBaslat() {
+        if (imagePreview) {
+
+            imagePreview.src =
+                "";
+
+        }
 
 
-                return;
+        /*
+         * Liste + dashboard
+         */
 
-            }
+        await resimleriYukle();
 
-
-@@ -2484,9 +2581,7 @@ async function adminPanelBaslat() {
-
-                            <div
-                                class="image-card"
-                                data-image-id="${escapeHTML(
-                                    image.id
-                                )}"
-                                data-image-id="${escapeHTML(image.id)}"
-                                style="
-                                    border:1px solid #e0e0e0;
-                                    border-radius:10px;
-@@ -2513,9 +2608,7 @@ async function adminPanelBaslat() {
-                                        url
-                                            ? `
-                                                <img
-                                                    src="${escapeHTML(
-                                                        url
-                                                    )}"
-                                                    src="${escapeHTML(url)}"
-                                                    alt="${escapeHTML(
-                                                        image.category ||
-                                                        "Sur Halı"
-@@ -2578,9 +2671,7 @@ async function adminPanelBaslat() {
-                                    <button
-                                        type="button"
-                                        class="delete-image-button"
-                                        data-id="${escapeHTML(
-                                            image.id
-                                        )}"
-                                        data-id="${escapeHTML(image.id)}"
-                                        data-path="${escapeHTML(
-                                            image.image_path ||
-                                            ""
-@@ -2639,7 +2730,9 @@ async function adminPanelBaslat() {
+        await dashboardGuncelle();
 
 
-                                if (!onay) {
+    } catch (error) {
 
-                                    return;
-
-                                }
-
-
-@@ -2681,19 +2774,25 @@ async function adminPanelBaslat() {
-                    </div>
-
-                    <h2>
-                        Hata oluştu
-                        Resimler yüklenemedi
-                    </h2>
-
-                    <p>
-                        ${escapeHTML(
-                            error.message
-                        )}
-                        ${escapeHTML(error.message)}
-                    </p>
-
-                </div>
-
-            `;
+        console.error(
+            "Resim yükleme hatası:",
+            error
+        );
 
 
-            if (imageCount) {
+        imageMesajiGoster(
+            "Resim yüklenemedi: " +
+            (error.message || error),
+            false
+        );
 
-                imageCount.textContent =
-                    "0 resim";
+    } finally {
 
-            }
+        if (uploadButton) {
+
+            uploadButton.disabled =
+                false;
+
+            uploadButton.textContent =
+                "Resmi Yükle";
 
         }
 
     }
-@@ -2713,17 +2812,18 @@ async function adminPanelBaslat() {
-            if (imagePath) {
 
-                const {
-                    error:
-                        storageError
-                    error: storageError
-                } =
-                    await supabaseClient
-                        .storage
-                        .from(
-                            "category-images"
-                        )
-                        .remove([
-                            imagePath
-                        ]);
-                        .remove(
-                            [
-                                imagePath
-                            ]
+}
+
+
+/* ==========================================================
+   RESİMLERİ YÜKLE
+========================================================== */
+
+async function resimleriYukle() {
+
+    const imageList =
+        document.getElementById(
+            "imageList"
+        );
+
+
+    const imageCount =
+        document.getElementById(
+            "imageCount"
+        );
+
+
+    if (!imageList) {
+        return;
+    }
+
+
+    imageList.innerHTML =
+        `
+        <div class="empty-state">
+            <p>Resimler yükleniyor...</p>
+        </div>
+        `;
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from(
+                    "category_images"
+                )
+                .select("*");
+
+
+        if (error) {
+
+            throw error;
+        }
+
+
+        const images =
+            data || [];
+
+
+        if (imageCount) {
+
+            imageCount.textContent =
+                images.length +
+                " resim";
+
+        }
+
+
+        if (images.length === 0) {
+
+            imageList.innerHTML =
+                `
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ▧
+                    </div>
+
+                    <h2>
+                        Henüz resim yok
+                    </h2>
+
+                    <p>
+                        Yeni bir resim yükleyebilirsiniz.
+                    </p>
+
+                </div>
+                `;
+
+            return;
+        }
+
+
+        imageList.innerHTML =
+            images
+                .map(function (image) {
+
+                    let url =
+                        image.image_url ||
+                        "";
+
+
+                    /*
+                     * image_url yoksa storage'dan
+                     * public URL oluştur.
+                     */
+
+                    if (
+                        !url &&
+                        image.image_path
+                    ) {
+
+                        const {
+                            data:
+                                publicData
+                        } =
+                            supabaseClient
+                                .storage
+                                .from(
+                                    "category-images"
+                                )
+                                .getPublicUrl(
+                                    image.image_path
+                                );
+
+
+                        if (
+                            publicData &&
+                            publicData.publicUrl
+                        ) {
+
+                            url =
+                                publicData.publicUrl;
+
+                        }
+
+                    }
+
+
+                    return `
+                    <div
+                        class="image-card"
+                        data-image-id="${escapeHTML(image.id)}"
+                        style="
+                            border:1px solid rgba(212,175,55,.25);
+                            border-radius:10px;
+                            padding:15px;
+                            background:#111;
+                        "
+                    >
+
+                        <div
+                            style="
+                                width:100%;
+                                height:220px;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                background:#050505;
+                                border-radius:8px;
+                                overflow:hidden;
+                                margin-bottom:12px;
+                            "
+                        >
+
+                            ${
+                                url
+                                    ? `
+                                    <img
+                                        src="${escapeHTML(url)}"
+                                        alt="${escapeHTML(
+                                            image.category ||
+                                            "Sur Halı"
+                                        )}"
+                                        style="
+                                            width:100%;
+                                            height:100%;
+                                            object-fit:contain;
+                                        "
+                                    >
+                                    `
+                                    : `
+                                    <span>
+                                        Resim bulunamadı
+                                    </span>
+                                    `
+                            }
+
+                        </div>
+
+
+                        <div>
+
+                            <strong
+                                style="
+                                    color:#D4AF37;
+                                    display:block;
+                                    margin-bottom:6px;
+                                "
+                            >
+                                ${escapeHTML(
+                                    image.category ||
+                                    "-"
+                                )}
+                            </strong>
+
+
+                            <small
+                                style="
+                                    display:block;
+                                    word-break:break-all;
+                                    opacity:.7;
+                                    margin-bottom:12px;
+                                "
+                            >
+                                ${escapeHTML(
+                                    image.image_path ||
+                                    ""
+                                )}
+                            </small>
+
+
+                            <button
+                                type="button"
+                                class="delete-image-button"
+                                data-id="${escapeHTML(image.id)}"
+                                data-path="${escapeHTML(
+                                    image.image_path ||
+                                    ""
+                                )}"
+                                style="
+                                    width:100%;
+                                    padding:9px;
+                                    cursor:pointer;
+                                    color:#fff !important;
+                                    border:1px solid #d9534f !important;
+                                    background:#8b1e1e !important;
+                                    border-radius:6px;
+                                "
+                            >
+                                Resmi Sil
+                            </button>
+
+                        </div>
+
+                    </div>
+                    `;
+
+                })
+                .join("");
+
+
+        /*
+         * SİL BUTONLARI
+         */
+
+        imageList
+            .querySelectorAll(
+                ".delete-image-button"
+            )
+            .forEach(function (button) {
+
+                button.addEventListener(
+                    "click",
+                    async function () {
+
+                        const id =
+                            button.getAttribute(
+                                "data-id"
+                            );
+
+
+                        const path =
+                            button.getAttribute(
+                                "data-path"
+                            );
+
+
+                        const onay =
+                            confirm(
+                                "Bu resmi silmek istediğinize emin misiniz?"
+                            );
+
+
+                        if (!onay) {
+                            return;
+                        }
+
+
+                        await resimSil(
+                            id,
+                            path
                         );
 
+                    }
+                );
 
-                if (storageError) {
-@@ -2739,8 +2839,7 @@ async function adminPanelBaslat() {
+            });
 
+
+    } catch (error) {
+
+        console.error(
+            "Resimler alınamadı:",
+            error
+        );
+
+
+        imageList.innerHTML =
+            `
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    !
+                </div>
+
+                <h2>
+                    Resimler yüklenemedi
+                </h2>
+
+                <p>
+                    ${escapeHTML(
+                        error.message ||
+                        "Bilinmeyen hata"
+                    )}
+                </p>
+
+            </div>
+            `;
+
+
+        if (imageCount) {
+
+            imageCount.textContent =
+                "0 resim";
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================================
+   RESİM SİL
+========================================================== */
+
+async function resimSil(
+    id,
+    imagePath
+) {
+
+    try {
+
+        /*
+         * Önce Storage.
+         */
+
+        if (imagePath) {
 
             const {
                 error:
-                    databaseError
-                error: databaseError
+                    storageError
             } =
                 await supabaseClient
+                    .storage
                     .from(
-@@ -2811,7 +2910,9 @@ async function adminPanelBaslat() {
+                        "category-images"
+                    )
+                    .remove([
+                        imagePath
+                    ]);
 
 
-        if (!message) {
+            if (storageError) {
 
-            return;
+                console.warn(
+                    "Storage silme uyarısı:",
+                    storageError
+                );
+
+            }
 
         }
 
 
-@@ -2834,9 +2935,7 @@ async function adminPanelBaslat() {
-            message.style.color =
-                "#246b36";
+        /*
+         * Sonra database.
+         */
 
+        const {
+            error:
+                databaseError
+        } =
+            await supabaseClient
+                .from(
+                    "category_images"
+                )
+                .delete()
+                .eq(
+                    "id",
+                    id
+                );
+
+
+        if (databaseError) {
+
+            throw databaseError;
         }
 
-        else {
-        } else {
 
-            message.style.border =
-                "1px solid #d9534f";
-@@ -2865,6 +2964,7 @@ async function adminPanelBaslat() {
-            message.textContent =
-                "";
+        alert(
+            "Resim başarıyla silindi."
+        );
 
 
-            message.style.display =
-                "none";
+        await resimleriYukle();
 
-@@ -2889,10 +2989,14 @@ async function adminPanelBaslat() {
-
-
-        const dotIndex =
-            name.lastIndexOf(".");
-            name.lastIndexOf(
-                "."
-            );
+        await dashboardGuncelle();
 
 
-        if (dotIndex !== -1) {
-        if (
-            dotIndex !== -1
-        ) {
+    } catch (error) {
 
-            const extension =
-                name
-@@ -2998,12 +3102,6 @@ async function adminPanelBaslat() {
-
-    /* ======================================================
-       İLK VERİLER
-       
-       ÖNEMLİ:
-       Bu await'ler artık adminPanelBaslat()
-       fonksiyonunun İÇİNDE.
-       
-       Böylece JavaScript SyntaxError vermeyecek.
-    ====================================================== */
-
-    await urunleriYukle();
-@@ -3012,7 +3110,7 @@ async function adminPanelBaslat() {
+        console.error(
+            "Resim silme hatası:",
+            error
+        );
 
 
-    /* ======================================================
-       RESİM YÖNETİMİNİ BAŞLAT
-       RESİM YÖNETİMİ
-    ====================================================== */
+        alert(
+            "Resim silinemedi:\n\n" +
+            error.message
+        );
 
-    resimYonetiminiBaslat();
-@@ -3066,4 +3164,3 @@ async function adminPanelBaslat() {
+    }
+
+}
+
+
+/* ==========================================================
+   RESİM MESAJI
+========================================================== */
+
+function imageMesajiGoster(
+    message,
+    success
+) {
+
+    const element =
+        document.getElementById(
+            "imageUploadMessage"
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.style.display =
+        "block";
+
+
+    element.style.border =
+        success
+            ? "1px solid #246b36"
+            : "1px solid #d9534f";
+
+
+    element.style.color =
+        success
+            ? "#8ee6a1"
+            : "#ff8a8a";
+
+
+    element.style.background =
+        success
+            ? "rgba(36,107,54,.15)"
+            : "rgba(217,83,79,.15)";
+
+}
+
+
+/* ==========================================================
+   ÇIKIŞ
+========================================================== */
+
+function cikisSisteminiBaslat() {
+
+    const logoutButton =
+        document.getElementById(
+            "logoutButton"
+        );
+
+
+    if (!logoutButton) {
+        return;
+    }
+
+
+    logoutButton.addEventListener(
+        "click",
+        async function () {
+
+            const onay =
+                confirm(
+                    "Yönetim panelinden çıkış yapmak istiyor musunuz?"
+                );
+
+
+            if (!onay) {
+                return;
+            }
+
+
+            try {
+
+                await supabaseClient.auth.signOut();
+
+            } catch (error) {
+
+                console.error(
+                    "Çıkış hatası:",
+                    error
+                );
+
+            }
+
+
+            window.location.href =
+                "admin-login.html";
+
+        }
     );
 
 }
-```
+
+
+/* ==========================================================
+   DOSYA UZANTISI
+========================================================== */
+
+function dosyaUzantisi(name) {
+
+    if (!name) {
+        return "jpg";
+    }
+
+
+    const dotIndex =
+        name.lastIndexOf(".");
+
+
+    if (
+        dotIndex === -1
+    ) {
+
+        return "jpg";
+    }
+
+
+    return name
+        .substring(
+            dotIndex + 1
+        )
+        .toLowerCase();
+
+}
+
+
+/* ==========================================================
+   HTML GÜVENLİK
+========================================================== */
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* ==========================================================
+   GLOBAL ERİŞİM
+========================================================== */
+
+window.supabaseClient =
+    supabaseClient;
+
+window.adminPanelBaslat =
+    adminPanelBaslat;
+
+window.urunleriYukle =
+    urunleriYukle;
+
+window.resimleriYukle =
+    resimleriYukle;
+
+window.dashboardGuncelle =
+    dashboardGuncelle;
+
+
+console.log(
+    "Sur Halı admin.js dosyası yüklendi."
+);
