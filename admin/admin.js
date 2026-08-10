@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             loginForm.dataset.supabaseBound = "true";
+
         }
 
         return;
@@ -82,6 +83,7 @@ async function girisYap(e) {
         );
 
         return;
+
     }
 
 
@@ -93,7 +95,9 @@ async function girisYap(e) {
 
 
     if (mesaj) {
+
         mesaj.textContent = "";
+
     }
 
 
@@ -114,15 +118,13 @@ async function girisYap(e) {
 
             mesaj.textContent =
                 "Supabase bağlantısı kurulamadı.";
+
         }
 
         return;
+
     }
 
-
-    /* ======================================================
-       SUPABASE GİRİŞ
-    ====================================================== */
 
     try {
 
@@ -155,9 +157,11 @@ async function girisYap(e) {
 
                 mesaj.textContent =
                     error.message;
+
             }
 
             return;
+
         }
 
 
@@ -166,10 +170,6 @@ async function girisYap(e) {
             data.user
         );
 
-
-        /* ==================================================
-           ADMİN PANELİNE GİT
-        ================================================== */
 
         window.location.href =
             "admin.html";
@@ -189,6 +189,7 @@ async function girisYap(e) {
             mesaj.textContent =
                 error.message ||
                 "Beklenmeyen bir hata oluştu.";
+
         }
 
     }
@@ -221,6 +222,7 @@ async function adminPanelBaslat() {
         );
 
         return;
+
     }
 
 
@@ -245,6 +247,7 @@ async function adminPanelBaslat() {
             );
 
             return;
+
         }
 
 
@@ -258,6 +261,7 @@ async function adminPanelBaslat() {
                 "admin-login.html";
 
             return;
+
         }
 
 
@@ -276,6 +280,7 @@ async function adminPanelBaslat() {
         );
 
         return;
+
     }
 
 
@@ -290,7 +295,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       SOL MENÜLER
+       SOL MENÜ
     ====================================================== */
 
     const menuItems =
@@ -300,13 +305,13 @@ async function adminPanelBaslat() {
 
 
     console.log(
-        "Bulunan menüler:",
+        "Menü sayısı:",
         menuItems.length
     );
 
 
     console.log(
-        "Bulunan sayfalar:",
+        "Sayfa sayısı:",
         pages.length
     );
 
@@ -317,21 +322,13 @@ async function adminPanelBaslat() {
 
     function sayfaAc(pageId) {
 
-        console.log(
-            "Sayfa açılıyor:",
-            pageId
-        );
+        pages.forEach(function (page) {
 
+            page.classList.remove(
+                "active-page"
+            );
 
-        pages.forEach(
-            function (page) {
-
-                page.classList.remove(
-                    "active-page"
-                );
-
-            }
-        );
+        });
 
 
         const targetPage =
@@ -348,6 +345,7 @@ async function adminPanelBaslat() {
             );
 
             return;
+
         }
 
 
@@ -356,27 +354,26 @@ async function adminPanelBaslat() {
         );
 
 
-        menuItems.forEach(
-            function (item) {
+        menuItems.forEach(function (item) {
 
-                item.classList.remove(
+            item.classList.remove(
+                "active"
+            );
+
+
+            if (
+                item.getAttribute(
+                    "data-page"
+                ) === pageId
+            ) {
+
+                item.classList.add(
                     "active"
                 );
 
-
-                if (
-                    item.getAttribute(
-                        "data-page"
-                    ) === pageId
-                ) {
-
-                    item.classList.add(
-                        "active"
-                    );
-                }
-
             }
-        );
+
+        });
 
     }
 
@@ -385,33 +382,31 @@ async function adminPanelBaslat() {
        SOL MENÜ TIKLAMALARI
     ====================================================== */
 
-    menuItems.forEach(
-        function (menuItem) {
+    menuItems.forEach(function (menuItem) {
 
-            menuItem.addEventListener(
-                "click",
-                function (e) {
+        menuItem.addEventListener(
+            "click",
+            function (e) {
 
-                    e.preventDefault();
-
-
-                    const pageId =
-                        menuItem.getAttribute(
-                            "data-page"
-                        );
+                e.preventDefault();
 
 
-                    sayfaAc(pageId);
+                const pageId =
+                    menuItem.getAttribute(
+                        "data-page"
+                    );
 
-                }
-            );
 
-        }
-    );
+                sayfaAc(pageId);
+
+            }
+        );
+
+    });
 
 
     /* ======================================================
-       DASHBOARD HIZLI İŞLEMLER
+       DASHBOARD HIZLI BUTONLAR
     ====================================================== */
 
     const quickButtons =
@@ -420,30 +415,28 @@ async function adminPanelBaslat() {
         );
 
 
-    quickButtons.forEach(
-        function (button) {
+    quickButtons.forEach(function (button) {
 
-            button.addEventListener(
-                "click",
-                function () {
+        button.addEventListener(
+            "click",
+            function () {
 
-                    const pageId =
-                        button.getAttribute(
-                            "data-page"
-                        );
+                const pageId =
+                    button.getAttribute(
+                        "data-page"
+                    );
 
 
-                    sayfaAc(pageId);
+                sayfaAc(pageId);
 
-                }
-            );
+            }
+        );
 
-        }
-    );
+    });
 
 
     /* ======================================================
-       ÜRÜN FORMU
+       ÜRÜN FORM ELEMANLARI
     ====================================================== */
 
     const newProductButton =
@@ -471,82 +464,10 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       YENİ ÜRÜN BUTONU
+       DÜZENLENEN ÜRÜN
     ====================================================== */
 
-    if (
-        newProductButton &&
-        productFormBox
-    ) {
-
-        newProductButton.addEventListener(
-            "click",
-            function () {
-
-                console.log(
-                    "Yeni ürün alanı açılıyor."
-                );
-
-
-                productFormBox.style.display =
-                    "block";
-
-
-                newProductButton.style.display =
-                    "none";
-
-
-                productFormBox.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-            }
-        );
-
-    }
-
-
-    /* ======================================================
-       VAZGEÇ
-    ====================================================== */
-
-    if (
-        cancelProductButton &&
-        productFormBox &&
-        newProductButton
-    ) {
-
-        cancelProductButton.addEventListener(
-            "click",
-            function () {
-
-                console.log(
-                    "Ürün ekleme iptal edildi."
-                );
-
-
-                productFormBox.style.display =
-                    "none";
-
-
-                newProductButton.style.display =
-                    "inline-block";
-
-
-                if (productForm) {
-
-                    productForm.reset();
-
-                }
-
-
-                formMesajiTemizle();
-
-            }
-        );
-
-    }
+    let duzenlenenUrunId = null;
 
 
     /* ======================================================
@@ -564,12 +485,14 @@ async function adminPanelBaslat() {
         if (message) {
 
             return message;
+
         }
 
 
         if (!productForm) {
 
             return null;
+
         }
 
 
@@ -621,6 +544,7 @@ async function adminPanelBaslat() {
         if (!message) {
 
             return;
+
         }
 
 
@@ -677,7 +601,117 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       ÜRÜN FORMU KAYDET
+       YENİ ÜRÜN
+    ====================================================== */
+
+    if (
+        newProductButton &&
+        productFormBox &&
+        productForm
+    ) {
+
+        newProductButton.addEventListener(
+            "click",
+            function () {
+
+                duzenlenenUrunId = null;
+
+
+                productForm.reset();
+
+
+                const formTitle =
+                    productFormBox.querySelector(
+                        "h2"
+                    );
+
+
+                if (formTitle) {
+
+                    formTitle.textContent =
+                        "Yeni Ürün Ekle";
+
+                }
+
+
+                const saveButton =
+                    productForm.querySelector(
+                        'button[type="submit"]'
+                    );
+
+
+                if (saveButton) {
+
+                    saveButton.textContent =
+                        "Ürünü Kaydet";
+
+                }
+
+
+                productFormBox.style.display =
+                    "block";
+
+
+                newProductButton.style.display =
+                    "none";
+
+
+                formMesajiTemizle();
+
+
+                productFormBox.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
+        );
+
+    }
+
+
+    /* ======================================================
+       VAZGEÇ
+    ====================================================== */
+
+    if (
+        cancelProductButton &&
+        productFormBox &&
+        newProductButton
+    ) {
+
+        cancelProductButton.addEventListener(
+            "click",
+            function () {
+
+                duzenlenenUrunId = null;
+
+
+                productFormBox.style.display =
+                    "none";
+
+
+                newProductButton.style.display =
+                    "inline-block";
+
+
+                if (productForm) {
+
+                    productForm.reset();
+
+                }
+
+
+                formMesajiTemizle();
+
+            }
+        );
+
+    }
+
+
+    /* ======================================================
+       ÜRÜN KAYDET
     ====================================================== */
 
     if (productForm) {
@@ -744,6 +778,7 @@ async function adminPanelBaslat() {
                     );
 
                     return;
+
                 }
 
 
@@ -789,6 +824,7 @@ async function adminPanelBaslat() {
                     nameElement.focus();
 
                     return;
+
                 }
 
 
@@ -802,6 +838,7 @@ async function adminPanelBaslat() {
                     categoryElement.focus();
 
                     return;
+
                 }
 
 
@@ -811,7 +848,9 @@ async function adminPanelBaslat() {
                 if (priceText !== "") {
 
                     price =
-                        Number(priceText);
+                        Number(
+                            priceText
+                        );
 
 
                     if (
@@ -824,6 +863,7 @@ async function adminPanelBaslat() {
                         );
 
                         return;
+
                     }
 
                 }
@@ -840,6 +880,7 @@ async function adminPanelBaslat() {
                     );
 
                     return;
+
                 }
 
 
@@ -854,94 +895,184 @@ async function adminPanelBaslat() {
                     saveButton.disabled =
                         true;
 
+
                     saveButton.textContent =
-                        "Kaydediliyor...";
+                        duzenlenenUrunId
+                            ? "Güncelleniyor..."
+                            : "Kaydediliyor...";
+
                 }
 
 
                 try {
 
-                    console.log(
-                        "Supabase products INSERT"
-                    );
+                    const urunData = {
+
+                        name: name,
+
+                        category: category,
+
+                        size: size || null,
+
+                        price: price,
+
+                        description:
+                            description || null,
+
+                        is_active:
+                            isActive
+
+                    };
 
 
-                    const {
-                        data,
-                        error
-                    } =
-                        await supabaseClient
-                            .from("products")
-                            .insert([
-                                {
-                                    name: name,
-                                    category: category,
-                                    size: size || null,
-                                    price: price,
-                                    description:
-                                        description || null,
-                                    image_url: null,
-                                    is_active: isActive
-                                }
-                            ])
-                            .select()
-                            .single();
+                    /* ==================================================
+                       GÜNCELLE
+                    ================================================== */
 
+                    if (duzenlenenUrunId) {
 
-                    if (error) {
-
-                        console.error(
-                            "Ürün kayıt hatası:",
+                        const {
+                            data,
                             error
+                        } =
+                            await supabaseClient
+                                .from("products")
+                                .update(
+                                    urunData
+                                )
+                                .eq(
+                                    "id",
+                                    duzenlenenUrunId
+                                )
+                                .select()
+                                .single();
+
+
+                        if (error) {
+
+                            console.error(
+                                "Ürün güncelleme hatası:",
+                                error
+                            );
+
+
+                            formMesajiGoster(
+                                "Ürün güncellenemedi: " +
+                                error.message,
+                                false
+                            );
+
+
+                            return;
+
+                        }
+
+
+                        console.log(
+                            "Ürün güncellendi:",
+                            data
                         );
 
 
                         formMesajiGoster(
-                            "Ürün kaydedilemedi: " +
-                            error.message,
-                            false
+                            "Ürün başarıyla güncellendi.",
+                            true
                         );
 
-                        return;
                     }
 
 
-                    console.log(
-                        "Ürün başarıyla kaydedildi:",
-                        data
-                    );
+                    /* ==================================================
+                       YENİ ÜRÜN
+                    ================================================== */
+
+                    else {
+
+                        const {
+                            data,
+                            error
+                        } =
+                            await supabaseClient
+                                .from("products")
+                                .insert([
+                                    {
+                                        name:
+                                            name,
+
+                                        category:
+                                            category,
+
+                                        size:
+                                            size || null,
+
+                                        price:
+                                            price,
+
+                                        description:
+                                            description || null,
+
+                                        image_url:
+                                            null,
+
+                                        is_active:
+                                            isActive
+                                    }
+                                ])
+                                .select()
+                                .single();
 
 
-                    formMesajiGoster(
-                        "Ürün başarıyla kaydedildi.",
-                        true
-                    );
+                        if (error) {
+
+                            console.error(
+                                "Ürün kayıt hatası:",
+                                error
+                            );
+
+
+                            formMesajiGoster(
+                                "Ürün kaydedilemedi: " +
+                                error.message,
+                                false
+                            );
+
+
+                            return;
+
+                        }
+
+
+                        console.log(
+                            "Ürün başarıyla kaydedildi:",
+                            data
+                        );
+
+
+                        formMesajiGoster(
+                            "Ürün başarıyla kaydedildi.",
+                            true
+                        );
+
+                    }
+
+
+                    duzenlenenUrunId =
+                        null;
 
 
                     productForm.reset();
 
 
-                    if (
-                        productFormBox &&
-                        newProductButton
-                    ) {
-
-                        setTimeout(
-                            function () {
-
-                                productFormBox.style.display =
-                                    "none";
-
-
-                                newProductButton.style.display =
-                                    "inline-block";
-
-
-                                formMesajiTemizle();
-
-                            },
-                            800
+                    const formTitle =
+                        productFormBox.querySelector(
+                            "h2"
                         );
+
+
+                    if (formTitle) {
+
+                        formTitle.textContent =
+                            "Yeni Ürün Ekle";
 
                     }
 
@@ -950,23 +1081,43 @@ async function adminPanelBaslat() {
 
                     await dashboardIstatistikleriniYukle();
 
+
+                    setTimeout(
+                        function () {
+
+                            productFormBox.style.display =
+                                "none";
+
+
+                            newProductButton.style.display =
+                                "inline-block";
+
+
+                            formMesajiTemizle();
+
+                        },
+                        800
+                    );
+
                 }
+
 
                 catch (error) {
 
                     console.error(
-                        "Ürün kaydetme sırasında hata:",
+                        "Ürün işlem hatası:",
                         error
                     );
 
 
                     formMesajiGoster(
-                        "Ürün kaydedilirken bir hata oluştu: " +
+                        "İşlem sırasında hata oluştu: " +
                         error.message,
                         false
                     );
 
                 }
+
 
                 finally {
 
@@ -974,6 +1125,7 @@ async function adminPanelBaslat() {
 
                         saveButton.disabled =
                             false;
+
 
                         saveButton.textContent =
                             "Ürünü Kaydet";
@@ -1009,6 +1161,7 @@ async function adminPanelBaslat() {
         if (!productList) {
 
             return;
+
         }
 
 
@@ -1045,7 +1198,17 @@ async function adminPanelBaslat() {
                     </div>
                 `;
 
+
+                if (productCount) {
+
+                    productCount.textContent =
+                        "Hata";
+
+                }
+
+
                 return;
+
             }
 
 
@@ -1070,10 +1233,12 @@ async function adminPanelBaslat() {
 
                     productCount.textContent =
                         "0 ürün";
+
                 }
 
 
                 return;
+
             }
 
 
@@ -1082,106 +1247,466 @@ async function adminPanelBaslat() {
                 productCount.textContent =
                     data.length +
                     " ürün";
+
             }
 
 
             productList.innerHTML =
-                data
-                    .map(
-                        function (product) {
+                data.map(function (product) {
 
-                            const fiyat =
-                                product.price !== null &&
-                                product.price !== undefined
-                                    ? Number(
-                                        product.price
-                                    ).toLocaleString(
-                                        "tr-TR",
-                                        {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2
-                                        }
-                                    ) + " TL"
-                                    : "-";
+                    const fiyat =
+                        product.price !== null &&
+                        product.price !== undefined
+                            ? Number(
+                                product.price
+                            ).toLocaleString(
+                                "tr-TR",
+                                {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }
+                            ) + " TL"
+                            : "-";
 
 
-                            return `
+                    const durum =
+                        product.is_active
+                            ? "Aktif"
+                            : "Pasif";
+
+
+                    const durumClass =
+                        product.is_active
+                            ? "active"
+                            : "passive";
+
+
+                    return `
+                        <div
+                            class="product-item"
+                            data-product-id="${escapeHTML(product.id)}"
+                            style="
+                                display:flex;
+                                justify-content:space-between;
+                                align-items:flex-start;
+                                gap:20px;
+                            "
+                        >
+
+                            <div
+                                class="product-item-info"
+                                style="flex:1;"
+                            >
+
+                                <h3>
+                                    ${escapeHTML(product.name)}
+                                </h3>
+
+                                <p>
+                                    <strong>Kategori:</strong>
+                                    ${escapeHTML(
+                                        product.category || "-"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Ölçü:</strong>
+                                    ${escapeHTML(
+                                        product.size || "-"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Fiyat:</strong>
+                                    ${fiyat}
+                                </p>
+
+                                ${
+                                    product.description
+                                        ? `
+                                            <p>
+                                                <strong>Açıklama:</strong>
+                                                ${escapeHTML(
+                                                    product.description
+                                                )}
+                                            </p>
+                                        `
+                                        : ""
+                                }
+
+                            </div>
+
+
+                            <div
+                                class="product-item-status"
+                                style="
+                                    display:flex;
+                                    flex-direction:column;
+                                    align-items:flex-end;
+                                    gap:12px;
+                                    min-width:150px;
+                                "
+                            >
+
+                                <span class="${durumClass}">
+                                    ${durum}
+                                </span>
+
+
                                 <div
-                                    class="product-item"
+                                    style="
+                                        display:flex;
+                                        gap:8px;
+                                        flex-wrap:wrap;
+                                    "
                                 >
 
-                                    <div
-                                        class="product-item-info"
+                                    <button
+                                        type="button"
+                                        class="outline-button edit-product-button"
+                                        data-id="${escapeHTML(product.id)}"
+                                        style="
+                                            padding:8px 12px;
+                                            cursor:pointer;
+                                        "
                                     >
+                                        Düzenle
+                                    </button>
 
-                                        <h3>
-                                            ${escapeHTML(
-                                                product.name
-                                            )}
-                                        </h3>
 
-                                        <p>
-                                            <strong>Kategori:</strong>
-                                            ${escapeHTML(
-                                                product.category || "-"
-                                            )}
-                                        </p>
-
-                                        <p>
-                                            <strong>Ölçü:</strong>
-                                            ${escapeHTML(
-                                                product.size || "-"
-                                            )}
-                                        </p>
-
-                                        <p>
-                                            <strong>Fiyat:</strong>
-                                            ${fiyat}
-                                        </p>
-
-                                        ${
-                                            product.description
-                                                ? `
-                                                    <p>
-                                                        <strong>Açıklama:</strong>
-                                                        ${escapeHTML(
-                                                            product.description
-                                                        )}
-                                                    </p>
-                                                `
-                                                : ""
-                                        }
-
-                                    </div>
-
-                                    <div
-                                        class="product-item-status"
+                                    <button
+                                        type="button"
+                                        class="delete-product-button"
+                                        data-id="${escapeHTML(product.id)}"
+                                        style="
+                                            padding:8px 12px;
+                                            cursor:pointer;
+                                            border:1px solid #d9534f;
+                                            background:#fff;
+                                            color:#d9534f;
+                                            border-radius:6px;
+                                        "
                                     >
-
-                                        <span>
-                                            ${
-                                                product.is_active
-                                                    ? "Aktif"
-                                                    : "Pasif"
-                                            }
-                                        </span>
-
-                                    </div>
+                                        Sil
+                                    </button>
 
                                 </div>
-                            `;
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }).join("");
+
+
+            /* ==================================================
+               DÜZENLE
+            ================================================== */
+
+            productList
+                .querySelectorAll(
+                    ".edit-product-button"
+                )
+                .forEach(function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            const id =
+                                button.getAttribute(
+                                    "data-id"
+                                );
+
+
+                            const product =
+                                data.find(function (item) {
+
+                                    return String(
+                                        item.id
+                                    ) === String(id);
+
+                                });
+
+
+                            if (!product) {
+
+                                alert(
+                                    "Ürün bulunamadı."
+                                );
+
+                                return;
+
+                            }
+
+
+                            urunDuzenlemeFormunuAc(
+                                product
+                            );
 
                         }
-                    )
-                    .join("");
+                    );
+
+                });
+
+
+            /* ==================================================
+               SİL
+            ================================================== */
+
+            productList
+                .querySelectorAll(
+                    ".delete-product-button"
+                )
+                .forEach(function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        async function () {
+
+                            const id =
+                                button.getAttribute(
+                                    "data-id"
+                                );
+
+
+                            const product =
+                                data.find(function (item) {
+
+                                    return String(
+                                        item.id
+                                    ) === String(id);
+
+                                });
+
+
+                            if (!product) {
+
+                                return;
+
+                            }
+
+
+                            const onay =
+                                confirm(
+                                    '"' +
+                                    product.name +
+                                    '" adlı ürünü silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz.'
+                                );
+
+
+                            if (!onay) {
+
+                                return;
+
+                            }
+
+
+                            await urunSil(
+                                product.id
+                            );
+
+                        }
+                    );
+
+                });
 
         }
+
 
         catch (error) {
 
             console.error(
                 "Ürünleri yüklerken hata:",
                 error
+            );
+
+
+            productList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">!</div>
+                    <h2>Hata oluştu</h2>
+                    <p>${escapeHTML(error.message)}</p>
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    /* ======================================================
+       ÜRÜN DÜZENLEME
+    ====================================================== */
+
+    function urunDuzenlemeFormunuAc(product) {
+
+        if (
+            !productForm ||
+            !productFormBox ||
+            !newProductButton
+        ) {
+
+            return;
+
+        }
+
+
+        duzenlenenUrunId =
+            product.id;
+
+
+        document.getElementById(
+            "productName"
+        ).value =
+            product.name || "";
+
+
+        document.getElementById(
+            "productCategory"
+        ).value =
+            product.category || "";
+
+
+        document.getElementById(
+            "productSize"
+        ).value =
+            product.size || "";
+
+
+        document.getElementById(
+            "productPrice"
+        ).value =
+            product.price !== null &&
+            product.price !== undefined
+                ? product.price
+                : "";
+
+
+        document.getElementById(
+            "productDescription"
+        ).value =
+            product.description || "";
+
+
+        document.getElementById(
+            "productActive"
+        ).value =
+            product.is_active
+                ? "true"
+                : "false";
+
+
+        const formTitle =
+            productFormBox.querySelector(
+                "h2"
+            );
+
+
+        if (formTitle) {
+
+            formTitle.textContent =
+                "Ürünü Düzenle";
+
+        }
+
+
+        const saveButton =
+            productForm.querySelector(
+                'button[type="submit"]'
+            );
+
+
+        if (saveButton) {
+
+            saveButton.textContent =
+                "Güncelle";
+
+        }
+
+
+        formMesajiTemizle();
+
+
+        productFormBox.style.display =
+            "block";
+
+
+        newProductButton.style.display =
+            "none";
+
+
+        productFormBox.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+
+
+    /* ======================================================
+       ÜRÜN SİL
+    ====================================================== */
+
+    async function urunSil(productId) {
+
+        try {
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("products")
+                    .delete()
+                    .eq(
+                        "id",
+                        productId
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    "Ürün silme hatası:",
+                    error
+                );
+
+
+                alert(
+                    "Ürün silinemedi:\n" +
+                    error.message
+                );
+
+
+                return;
+
+            }
+
+
+            await urunleriYukle();
+
+            await dashboardIstatistikleriniYukle();
+
+
+            alert(
+                "Ürün başarıyla silindi."
+            );
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "Ürün silme hatası:",
+                error
+            );
+
+
+            alert(
+                "Ürün silinirken hata oluştu:\n" +
+                error.message
             );
 
         }
@@ -1201,36 +1726,22 @@ async function adminPanelBaslat() {
         ) {
 
             return "";
+
         }
 
 
         return String(value)
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-            .replace(
-                /</g,
-                "&lt;"
-            )
-            .replace(
-                />/g,
-                "&gt;"
-            )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
-            );
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
     }
 
 
     /* ======================================================
-       DASHBOARD İSTATİSTİKLERİ
+       DASHBOARD
     ====================================================== */
 
     async function dashboardIstatistikleriniYukle() {
@@ -1264,6 +1775,7 @@ async function adminPanelBaslat() {
 
                     totalProducts.textContent =
                         totalCount || 0;
+
                 }
 
             }
@@ -1300,6 +1812,7 @@ async function adminPanelBaslat() {
 
                     activeProducts.textContent =
                         activeCount || 0;
+
                 }
 
             }
@@ -1315,6 +1828,7 @@ async function adminPanelBaslat() {
 
                 totalImages.textContent =
                     "0";
+
             }
 
 
@@ -1328,9 +1842,11 @@ async function adminPanelBaslat() {
 
                 storageUsage.textContent =
                     "0 MB";
+
             }
 
         }
+
 
         catch (error) {
 
@@ -1345,7 +1861,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       İLK VERİLERİ YÜKLE
+       İLK VERİLER
     ====================================================== */
 
     await urunleriYukle();
@@ -1379,6 +1895,7 @@ async function adminPanelBaslat() {
                     await supabaseClient.auth.signOut();
 
                 }
+
 
                 catch (error) {
 
