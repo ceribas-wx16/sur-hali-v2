@@ -1,317 +1,559 @@
 <!DOCTYPE html>
-
 <html lang="tr">
 
 <head>
+
     <meta charset="UTF-8">
 
-```
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>Sur Halı | Yönetim Paneli</title>
+    <title>Sur Halı | Yönetim Paneli</title>
 
-<link
-    rel="stylesheet"
-    href="admin.css"
->
-```
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
+
+    <style>
+
+        /* ==========================================================
+           RESİM YÖNETİMİ BUTONU
+        ========================================================== */
+
+        .quick-actions .image-management-button {
+
+            color: #D4AF37 !important;
+
+            -webkit-text-fill-color: #D4AF37 !important;
+
+            border: 1px solid #D4AF37 !important;
+
+            background: #111111 !important;
+
+            font-weight: 600;
+
+        }
+
+        .quick-actions .image-management-button:hover {
+
+            color: #D4AF37 !important;
+
+            -webkit-text-fill-color: #D4AF37 !important;
+
+            border-color: #D4AF37 !important;
+
+            background: #1b1b1b !important;
+
+        }
+
+
+        /* ==========================================================
+           RESİM YÖNETİMİ
+        ========================================================== */
+
+        .image-manager {
+
+            width: 100%;
+
+        }
+
+
+        .image-upload-box {
+
+            border: 1px solid #e1e1e1;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            background: #ffffff;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .image-upload-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+
+            gap: 20px;
+
+        }
+
+
+        .image-upload-field {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+
+        }
+
+
+        .image-upload-field label {
+
+            font-weight: 600;
+
+            color: #222;
+
+        }
+
+
+        .image-upload-field select,
+        .image-upload-field input[type="file"] {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #d8d8d8;
+
+            border-radius: 7px;
+
+            background: #fff;
+
+            box-sizing: border-box;
+
+        }
+
+
+        .image-preview-area {
+
+            margin-top: 20px;
+
+            display: none;
+
+            border: 1px dashed #D4AF37;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            background: #fafafa;
+
+        }
+
+
+        .image-preview-area img {
+
+            max-width: 300px;
+
+            max-height: 250px;
+
+            width: auto;
+
+            height: auto;
+
+            border-radius: 8px;
+
+            object-fit: contain;
+
+        }
+
+
+        .image-preview-name {
+
+            margin-top: 10px;
+
+            color: #555;
+
+            font-size: 14px;
+
+        }
+
+
+        .image-upload-actions {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .gold-image-button {
+
+            border: 1px solid #D4AF37;
+
+            background: #D4AF37;
+
+            color: #111111;
+
+            padding: 11px 20px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+        }
+
+
+        .gold-image-button:hover {
+
+            background: #c5a12f;
+
+        }
+
+
+        .outline-image-button {
+
+            border: 1px solid #D4AF37;
+
+            background: #111111;
+
+            color: #D4AF37 !important;
+
+            -webkit-text-fill-color: #D4AF37 !important;
+
+            padding: 11px 20px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+        }
+
+
+        .outline-image-button:hover {
+
+            background: #1b1b1b;
+
+            color: #D4AF37 !important;
+
+        }
+
+
+        .image-message {
+
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+        }
+
+
+        .image-message.success {
+
+            display: block;
+
+            border: 1px solid #4caf50;
+
+            background: #f0fff4;
+
+            color: #216e39;
+
+        }
+
+
+        .image-message.error {
+
+            display: block;
+
+            border: 1px solid #d9534f;
+
+            background: #fff5f5;
+
+            color: #a94442;
+
+        }
+
+
+        .image-list-box {
+
+            border: 1px solid #e1e1e1;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            background: #ffffff;
+
+        }
+
+
+        .image-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fill,
+                    minmax(180px, 1fr)
+                );
+
+            gap: 20px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .image-card {
+
+            border: 1px solid #e1e1e1;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+            background: #fff;
+
+        }
+
+
+        .image-card-preview {
+
+            width: 100%;
+
+            height: 180px;
+
+            background: #f7f7f7;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            overflow: hidden;
+
+        }
+
+
+        .image-card-preview img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+        }
+
+
+        .image-card-info {
+
+            padding: 12px;
+
+        }
+
+
+        .image-card-name {
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            word-break: break-word;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .image-card-folder {
+
+            font-size: 12px;
+
+            color: #777;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .delete-image-button {
+
+            width: 100%;
+
+            padding: 8px 10px;
+
+            border: 1px solid #d9534f;
+
+            background: #fff;
+
+            color: #d9534f;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+        }
+
+
+        .delete-image-button:hover {
+
+            background: #fff5f5;
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .image-upload-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .image-grid {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
+
 
 <div class="admin-container">
 
-```
-<!-- ==================================================
-     SOL MENÜ
-=================================================== -->
-
-<aside class="sidebar">
-
-    <div class="sidebar-header">
-
-        <img
-            src="../assets/images/logo.jpeg"
-            alt="Sur Halı"
-            class="admin-logo"
-        >
-
-        <div class="panel-title">
-            YÖNETİM PANELİ
-        </div>
-
-    </div>
-
-
-    <nav class="sidebar-menu">
-
-        <button
-            class="menu-item active"
-            data-page="dashboardPage"
-            type="button"
-        >
-            <span>▣</span>
-            Dashboard
-        </button>
-
-
-        <button
-            class="menu-item"
-            data-page="productsPage"
-            type="button"
-        >
-            <span>▤</span>
-            Ürünler
-        </button>
-
-
-        <button
-            class="menu-item"
-            data-page="imagesPage"
-            type="button"
-        >
-            <span>▧</span>
-            Resimler
-        </button>
-
-
-        <button
-            class="menu-item"
-            data-page="settingsPage"
-            type="button"
-        >
-            <span>⚙</span>
-            Site Ayarları
-        </button>
-
-    </nav>
-
-
-    <div class="sidebar-bottom">
-
-        <button
-            class="menu-item logout-button"
-            id="logoutButton"
-            type="button"
-        >
-            <span>↪</span>
-            Çıkış Yap
-        </button>
-
-    </div>
-
-</aside>
-
-
-<!-- ==================================================
-     ANA İÇERİK
-=================================================== -->
-
-<main class="main-content">
-
 
     <!-- ==================================================
-         DASHBOARD
+         SOL MENÜ
     =================================================== -->
 
-    <section
-        class="page active-page"
-        id="dashboardPage"
-    >
+    <aside class="sidebar">
 
-        <div class="page-header">
+        <div class="sidebar-header">
 
-            <div>
+            <img
+                src="../assets/images/logo.jpeg"
+                alt="Sur Halı"
+                class="admin-logo"
+            >
 
-                <h1>Dashboard</h1>
-
-                <p>
-                    Sur Halı yönetim paneline hoş geldiniz.
-                </p>
-
+            <div class="panel-title">
+                YÖNETİM PANELİ
             </div>
 
         </div>
 
 
-        <!-- İSTATİSTİKLER -->
+        <nav class="sidebar-menu">
 
-        <div class="stats-grid">
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ▤
-                </div>
-
-                <div>
-
-                    <span>
-                        Toplam Ürün
-                    </span>
-
-                    <strong id="totalProducts">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ✓
-                </div>
-
-                <div>
-
-                    <span>
-                        Aktif Ürün
-                    </span>
-
-                    <strong id="activeProducts">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ▧
-                </div>
-
-                <div>
-
-                    <span>
-                        Toplam Resim
-                    </span>
-
-                    <strong id="totalImages">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ◈
-                </div>
-
-                <div>
-
-                    <span>
-                        Storage Kullanımı
-                    </span>
-
-                    <strong id="storageUsage">
-                        0 MB
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- HIZLI İŞLEMLER -->
-
-        <div class="dashboard-box">
-
-            <h2>Hızlı İşlemler</h2>
-
-            <div class="quick-actions">
-
-                <button
-                    type="button"
-                    class="gold-button"
-                    data-page="productsPage"
-                >
-                    Ürün Yönetimi
-                </button>
-
-
-                <button
-                    type="button"
-                    class="outline-button"
-                    data-page="imagesPage"
-                >
-                    Resim Yönetimi
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ==================================================
-         ÜRÜNLER
-    =================================================== -->
-
-    <section
-        class="page"
-        id="productsPage"
-    >
-
-        <div class="page-header">
-
-            <div>
-
-                <h1>Ürünler</h1>
-
-                <p>
-                    Ürünlerinizi buradan yönetin.
-                </p>
-
-            </div>
+            <button
+                class="menu-item active"
+                data-page="dashboardPage"
+                type="button"
+            >
+                <span>▣</span>
+                Dashboard
+            </button>
 
 
             <button
+                class="menu-item"
+                data-page="productsPage"
                 type="button"
-                class="gold-button"
-                id="newProductButton"
             >
-                + Yeni Ürün
+                <span>▤</span>
+                Ürünler
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="imagesPage"
+                type="button"
+            >
+                <span>▧</span>
+                Resimler
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="settingsPage"
+                type="button"
+            >
+                <span>⚙</span>
+                Site Ayarları
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="menu-item logout-button"
+                id="logoutButton"
+                type="button"
+            >
+                <span>↪</span>
+                Çıkış Yap
             </button>
 
         </div>
 
+    </aside>
+
+
+    <!-- ==================================================
+         ANA İÇERİK
+    =================================================== -->
+
+    <main class="main-content">
+
 
         <!-- ==================================================
-             YENİ ÜRÜN FORMU
+             DASHBOARD
         =================================================== -->
 
-        <div
-            class="content-box"
-            id="productFormBox"
-            style="display: none;"
+        <section
+            class="page active-page"
+            id="dashboardPage"
         >
 
-            <div class="form-header">
+            <div class="page-header">
 
                 <div>
 
-                    <h2>Yeni Ürün Ekle</h2>
+                    <h1>Dashboard</h1>
 
                     <p>
-                        Ürün bilgilerini girerek kaydedebilirsiniz.
+                        Sur Halı yönetim paneline hoş geldiniz.
                     </p>
 
                 </div>
@@ -319,340 +561,681 @@
             </div>
 
 
-            <form id="productForm">
+            <!-- İSTATİSTİKLER -->
 
-                <div class="product-form-grid">
+            <div class="stats-grid">
 
 
-                    <!-- ÜRÜN ADI -->
+                <div class="stat-card">
 
-                    <div class="form-group">
-
-                        <label for="productName">
-                            Ürün Adı
-                        </label>
-
-                        <input
-                            type="text"
-                            id="productName"
-                            placeholder="Örn. Modern Halı"
-                            required
-                        >
-
+                    <div class="stat-icon">
+                        ▤
                     </div>
 
+                    <div>
 
-                    <!-- KATEGORİ -->
+                        <span>
+                            Toplam Ürün
+                        </span>
 
-                    <div class="form-group">
-
-                        <label for="productCategory">
-                            Kategori
-                        </label>
-
-                        <select
-                            id="productCategory"
-                            required
-                        >
-
-                            <option value="">
-                                Kategori seçiniz
-                            </option>
-
-                            <option value="Halılar">
-                                Halılar
-                            </option>
-
-                            <option value="Klasik Yolluklar">
-                                Klasik Yolluklar
-                            </option>
-
-                            <option value="Sisal">
-                                Sisal
-                            </option>
-
-                            <option value="Kaymaz">
-                                Kaymaz
-                            </option>
-
-                            <option value="Özel Kesim">
-                                Özel Kesim
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- ÖLÇÜ -->
-
-                    <div class="form-group">
-
-                        <label for="productSize">
-                            Ölçü
-                        </label>
-
-                        <input
-                            type="text"
-                            id="productSize"
-                            placeholder="Örn. 160x230 cm"
-                        >
-
-                    </div>
-
-
-                    <!-- FİYAT -->
-
-                    <div class="form-group">
-
-                        <label for="productPrice">
-                            Fiyat (TL)
-                        </label>
-
-                        <input
-                            type="number"
-                            id="productPrice"
-                            min="0"
-                            step="0.01"
-                            placeholder="Örn. 4500"
-                        >
-
-                    </div>
-
-
-                    <!-- AÇIKLAMA -->
-
-                    <div
-                        class="form-group"
-                        style="grid-column: 1 / -1;"
-                    >
-
-                        <label for="productDescription">
-                            Açıklama
-                        </label>
-
-                        <textarea
-                            id="productDescription"
-                            rows="5"
-                            placeholder="Ürün hakkında kısa açıklama..."
-                        ></textarea>
-
-                    </div>
-
-
-                    <!-- DURUM -->
-
-                    <div class="form-group">
-
-                        <label for="productActive">
-                            Durum
-                        </label>
-
-                        <select id="productActive">
-
-                            <option value="true">
-                                Aktif
-                            </option>
-
-                            <option value="false">
-                                Pasif
-                            </option>
-
-                        </select>
+                        <strong id="totalProducts">
+                            0
+                        </strong>
 
                     </div>
 
                 </div>
 
 
-                <!-- FORM BUTONLARI -->
+                <div class="stat-card">
 
-                <div class="form-actions">
+                    <div class="stat-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Aktif Ürün
+                        </span>
+
+                        <strong id="activeProducts">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ▧
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Toplam Resim
+                        </span>
+
+                        <strong id="totalImages">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ◈
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Storage Kullanımı
+                        </span>
+
+                        <strong id="storageUsage">
+                            0 MB
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- HIZLI İŞLEMLER -->
+
+            <div class="dashboard-box">
+
+                <h2>Hızlı İşlemler</h2>
+
+                <div class="quick-actions">
 
                     <button
-                        type="submit"
+                        type="button"
                         class="gold-button"
+                        data-page="productsPage"
                     >
-                        Ürünü Kaydet
+                        Ürün Yönetimi
                     </button>
 
 
-                   <button
-    type="button"
-    class="gold-button"
-    id="cancelProductButton"
->
-    Vazgeç
-</button>
+                    <button
+                        type="button"
+                        class="outline-button image-management-button"
+                        data-page="imagesPage"
+                    >
+                        Resim Yönetimi
+                    </button>
 
                 </div>
 
-            </form>
+            </div>
 
-        </div>
+        </section>
+
 
 
         <!-- ==================================================
-             ÜRÜN LİSTESİ
+             ÜRÜNLER
         =================================================== -->
 
-        <div
-            class="content-box"
-            id="productListBox"
+        <section
+            class="page"
+            id="productsPage"
         >
 
-            <div class="list-header">
+            <div class="page-header">
 
                 <div>
 
-                    <h2>Ürün Listesi</h2>
+                    <h1>Ürünler</h1>
 
                     <p>
-                        Sisteme eklenen ürünler burada görüntülenecek.
+                        Ürünlerinizi buradan yönetin.
                     </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="gold-button"
+                    id="newProductButton"
+                >
+                    + Yeni Ürün
+                </button>
+
+            </div>
+
+
+            <!-- YENİ ÜRÜN FORMU -->
+
+            <div
+                class="content-box"
+                id="productFormBox"
+                style="display: none;"
+            >
+
+                <div class="form-header">
+
+                    <div>
+
+                        <h2>
+                            Yeni Ürün Ekle
+                        </h2>
+
+                        <p>
+                            Ürün bilgilerini girerek kaydedebilirsiniz.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form id="productForm">
+
+                    <div class="product-form-grid">
+
+
+                        <div class="form-group">
+
+                            <label for="productName">
+                                Ürün Adı
+                            </label>
+
+                            <input
+                                type="text"
+                                id="productName"
+                                placeholder="Örn. Modern Halı"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="productCategory">
+                                Kategori
+                            </label>
+
+                            <select
+                                id="productCategory"
+                                required
+                            >
+
+                                <option value="">
+                                    Kategori seçiniz
+                                </option>
+
+                                <option value="Halılar">
+                                    Halılar
+                                </option>
+
+                                <option value="Klasik Yolluklar">
+                                    Klasik Yolluklar
+                                </option>
+
+                                <option value="Sisal">
+                                    Sisal
+                                </option>
+
+                                <option value="Kaymaz">
+                                    Kaymaz
+                                </option>
+
+                                <option value="Özel Kesim">
+                                    Özel Kesim
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="productSize">
+                                Ölçü
+                            </label>
+
+                            <input
+                                type="text"
+                                id="productSize"
+                                placeholder="Örn. 160x230 cm"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="productPrice">
+                                Fiyat (TL)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productPrice"
+                                min="0"
+                                step="0.01"
+                                placeholder="Örn. 4500"
+                            >
+
+                        </div>
+
+
+                        <div
+                            class="form-group"
+                            style="grid-column: 1 / -1;"
+                        >
+
+                            <label for="productDescription">
+                                Açıklama
+                            </label>
+
+                            <textarea
+                                id="productDescription"
+                                rows="5"
+                                placeholder="Ürün hakkında kısa açıklama..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="productActive">
+                                Durum
+                            </label>
+
+                            <select id="productActive">
+
+                                <option value="true">
+                                    Aktif
+                                </option>
+
+                                <option value="false">
+                                    Pasif
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="gold-button"
+                        >
+                            Ürünü Kaydet
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="gold-button"
+                            id="cancelProductButton"
+                        >
+                            Vazgeç
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- ÜRÜN LİSTESİ -->
+
+            <div
+                class="content-box"
+                id="productListBox"
+            >
+
+                <div class="list-header">
+
+                    <div>
+
+                        <h2>
+                            Ürün Listesi
+                        </h2>
+
+                        <p>
+                            Sisteme eklenen ürünler burada görüntülenecek.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="product-count"
+                        id="productCount"
+                    >
+                        0 ürün
+                    </div>
 
                 </div>
 
 
                 <div
-                    class="product-count"
-                    id="productCount"
+                    class="product-list"
+                    id="productList"
                 >
-                    0 ürün
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            ▤
+                        </div>
+
+                        <h2>
+                            Henüz ürün bulunmuyor
+                        </h2>
+
+                        <p>
+                            Yeni Ürün butonunu kullanarak
+                            ilk ürününüzü ekleyebilirsiniz.
+                        </p>
+
+                    </div>
+
                 </div>
 
             </div>
 
+        </section>
 
-            <div
-                class="product-list"
-                id="productList"
-            >
 
-                <div class="empty-state">
 
-                    <div class="empty-icon">
-                        ▤
-                    </div>
+        <!-- ==================================================
+             RESİMLER
+        =================================================== -->
 
-                    <h2>
-                        Henüz ürün bulunmuyor
-                    </h2>
+        <section
+            class="page"
+            id="imagesPage"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Resim Yönetimi
+                    </h1>
 
                     <p>
-                        Yeni Ürün butonunu kullanarak
-                        ilk ürününüzü ekleyebilirsiniz.
+                        Site ve ürün resimlerini buradan yönetin.
                     </p>
 
                 </div>
 
             </div>
 
-        </div>
 
-    </section>
-
-
-    <!-- ==================================================
-         RESİMLER
-    =================================================== -->
-
-    <section
-        class="page"
-        id="imagesPage"
-    >
-
-        <div class="page-header">
-
-            <div>
-
-                <h1>Resimler</h1>
-
-                <p>
-                    Site resimlerini buradan yönetin.
-                </p>
-
-            </div>
-
-        </div>
+            <div class="image-manager">
 
 
-        <div class="content-box">
+                <!-- ==================================================
+                     RESİM YÜKLEME
+                =================================================== -->
 
-            <div class="empty-state">
+                <div class="image-upload-box">
 
-                <div class="empty-icon">
-                    ▧
+                    <h2>
+                        Yeni Resim Yükle
+                    </h2>
+
+                    <p>
+                        Resmi seçin, hangi kategoriye ait olduğunu belirleyin
+                        ve Supabase Storage'a yükleyin.
+                    </p>
+
+
+                    <div class="image-upload-grid">
+
+
+                        <div class="image-upload-field">
+
+                            <label for="imageCategory">
+                                Kategori
+                            </label>
+
+                            <select id="imageCategory">
+
+                                <option value="">
+                                    Kategori seçiniz
+                                </option>
+
+                                <option value="Halılar">
+                                    Halılar
+                                </option>
+
+                                <option value="Klasik Yolluklar">
+                                    Klasik Yolluklar
+                                </option>
+
+                                <option value="Sisal">
+                                    Sisal
+                                </option>
+
+                                <option value="Kaymaz">
+                                    Kaymaz
+                                </option>
+
+                                <option value="Özel Kesim">
+                                    Özel Kesim
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="image-upload-field">
+
+                            <label for="imageFile">
+                                Resim
+                            </label>
+
+                            <input
+                                type="file"
+                                id="imageFile"
+                                accept="image/jpeg,image/png,image/webp,image/jpg"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ÖNİZLEME -->
+
+                    <div
+                        id="imagePreviewArea"
+                        class="image-preview-area"
+                    >
+
+                        <img
+                            id="imagePreview"
+                            src=""
+                            alt="Resim önizleme"
+                        >
+
+                        <div
+                            id="imagePreviewName"
+                            class="image-preview-name"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- BUTONLAR -->
+
+                    <div class="image-upload-actions">
+
+                        <button
+                            type="button"
+                            id="uploadImageButton"
+                            class="gold-image-button"
+                        >
+                            Resmi Yükle
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="clearImageButton"
+                            class="outline-image-button"
+                        >
+                            Temizle
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="imageUploadMessage"
+                        class="image-message"
+                    ></div>
+
                 </div>
 
-                <h2>
-                    Resim Yönetimi
-                </h2>
-
-                <p>
-                    Resim yükleme ve silme sistemi
-                    bir sonraki aşamada aktif edilecek.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
 
 
-    <!-- ==================================================
-         SİTE AYARLARI
-    =================================================== -->
+                <!-- ==================================================
+                     YÜKLENEN RESİMLER
+                =================================================== -->
 
-    <section
-        class="page"
-        id="settingsPage"
-    >
+                <div class="image-list-box">
 
-        <div class="page-header">
+                    <div class="list-header">
 
-            <div>
+                        <div>
 
-                <h1>Site Ayarları</h1>
+                            <h2>
+                                Yüklenen Resimler
+                            </h2>
 
-                <p>
-                    Web sitenizin temel bilgilerini yönetin.
-                </p>
+                            <p>
+                                Supabase Storage içerisindeki resimler.
+                            </p>
 
-            </div>
-
-        </div>
+                        </div>
 
 
-        <div class="content-box">
+                        <div
+                            class="product-count"
+                            id="imageCount"
+                        >
+                            0 resim
+                        </div>
 
-            <div class="empty-state">
+                    </div>
 
-                <div class="empty-icon">
-                    ⚙
+
+                    <div
+                        id="imageList"
+                        class="image-grid"
+                    >
+
+                        <div class="empty-state">
+
+                            <div class="empty-icon">
+                                ▧
+                            </div>
+
+                            <h2>
+                                Henüz resim bulunmuyor
+                            </h2>
+
+                            <p>
+                                Yukarıdaki alanı kullanarak ilk resminizi yükleyebilirsiniz.
+                            </p>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <h2>
-                    Site Ayarları
-                </h2>
+            </div>
 
-                <p>
-                    Ayarlar bir sonraki aşamada
-                    aktif edilecek.
-                </p>
+        </section>
+
+
+
+        <!-- ==================================================
+             SİTE AYARLARI
+        =================================================== -->
+
+        <section
+            class="page"
+            id="settingsPage"
+        >
+
+            <div class="page-header">
+
+                <div>
+
+                    <h1>
+                        Site Ayarları
+                    </h1>
+
+                    <p>
+                        Web sitenizin temel bilgilerini yönetin.
+                    </p>
+
+                </div>
 
             </div>
 
-        </div>
 
-    </section>
+            <div class="content-box">
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ⚙
+                    </div>
+
+                    <h2>
+                        Site Ayarları
+                    </h2>
+
+                    <p>
+                        Ayarlar bir sonraki aşamada
+                        aktif edilecek.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
 
 
-</main>
-```
+    </main>
 
 </div>
+
 
 <!-- ==================================================
      SUPABASE
@@ -663,6 +1246,7 @@
 <script src="../js/supabase.js"></script>
 
 <script src="admin.js"></script>
+
 
 </body>
 
