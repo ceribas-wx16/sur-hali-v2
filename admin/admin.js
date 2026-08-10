@@ -2310,12 +2310,31 @@ async function adminPanelBaslat() {
                      * model-123456.jpg
                      */
 
-                    const filePath =
-                        category +
-                        "/" +
-                        productId +
-                        "/" +
-                        fileName;
+                  const storageCategoryMap = {
+    "Halılar": "halilar",
+    "Klasik Yolluklar": "klasik-yolluklar",
+    "Sisal": "sisal",
+    "Kaymaz": "kaymaz",
+    "Özel Kesim": "ozel-kesim"
+};
+
+const storageCategory =
+    storageCategoryMap[category] ||
+    category
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/ı/g, "i")
+        .replace(/İ/g, "I")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+const filePath =
+    storageCategory +
+    "/" +
+    productId +
+    "/" +
+    fileName;
 
 
                     console.log(
