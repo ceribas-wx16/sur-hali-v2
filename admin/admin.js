@@ -1,4 +1,4 @@
-console.log("Sur Halı Admin başlatılıyor...");
+console.log("Sur Halı Admin JS yükleniyor...");
 
 
 /* ==========================================================
@@ -9,27 +9,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("DOM hazır.");
 
+
+    /* ======================================================
+       GİRİŞ SAYFASI
+    ====================================================== */
+
     const loginForm =
         document.getElementById("loginForm");
 
-    /* GİRİŞ SAYFASI */
 
     if (loginForm) {
 
-        console.log("Giriş sayfası.");
+        console.log("Giriş sayfası bulundu.");
+
+
+        loginForm.addEventListener(
+            "submit",
+            girisYap
+        );
+
+
+        console.log(
+            "Giriş formu submit eventi bağlandı."
+        );
+
 
         return;
     }
 
 
-    /* ADMİN PANELİ */
+    /* ======================================================
+       ADMİN PANELİ
+    ====================================================== */
 
     const adminContainer =
-        document.querySelector(".admin-container");
+        document.querySelector(
+            ".admin-container"
+        );
+
 
     if (adminContainer) {
 
-        console.log("Admin paneli bulundu.");
+        console.log(
+            "Admin paneli bulundu."
+        );
+
 
         adminPanelBaslat();
 
@@ -46,27 +70,84 @@ async function girisYap(e) {
 
     e.preventDefault();
 
-    const email =
-        document.getElementById("email").value.trim();
 
-    const password =
-        document.getElementById("password").value;
+    console.log(
+        "Giriş butonuna basıldı."
+    );
+
+
+    const emailElement =
+        document.getElementById("email");
+
+
+    const passwordElement =
+        document.getElementById("password");
+
 
     const mesaj =
-        document.getElementById("loginMessage");
+        document.getElementById(
+            "loginMessage"
+        );
 
 
-    if (mesaj) {
-        mesaj.textContent = "";
+    if (
+        !emailElement ||
+        !passwordElement
+    ) {
+
+        console.error(
+            "E-posta veya şifre alanı bulunamadı."
+        );
+
+
+        if (mesaj) {
+
+            mesaj.textContent =
+                "Giriş alanları bulunamadı.";
+
+        }
+
+
+        return;
     }
 
 
-    if (typeof supabaseClient === "undefined") {
+    const email =
+        emailElement.value.trim();
+
+
+    const password =
+        passwordElement.value;
+
+
+    if (mesaj) {
+
+        mesaj.textContent = "";
+
+    }
+
+
+    /* ======================================================
+       SUPABASE KONTROLÜ
+    ====================================================== */
+
+    if (
+        typeof supabaseClient ===
+        "undefined"
+    ) {
+
+        console.error(
+            "supabaseClient bulunamadı."
+        );
+
 
         if (mesaj) {
+
             mesaj.textContent =
                 "Supabase bağlantısı kurulamadı.";
+
         }
+
 
         return;
     }
@@ -74,13 +155,30 @@ async function girisYap(e) {
 
     try {
 
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
+        console.log(
+            "Supabase giriş deneniyor..."
+        );
 
-                email: email,
-                password: password
 
-            });
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
+        console.log(
+            "Supabase giriş cevabı:",
+            data,
+            error
+        );
 
 
         if (error) {
@@ -90,10 +188,14 @@ async function girisYap(e) {
                 error
             );
 
+
             if (mesaj) {
+
                 mesaj.textContent =
                     error.message;
+
             }
+
 
             return;
         }
@@ -105,16 +207,18 @@ async function girisYap(e) {
         );
 
 
-        window.location.href = "admin.html";
+        window.location.href =
+            "admin.html";
 
     }
 
     catch (error) {
 
         console.error(
-            "Beklenmeyen hata:",
+            "Beklenmeyen giriş hatası:",
             error
         );
+
 
         if (mesaj) {
 
@@ -135,12 +239,19 @@ async function girisYap(e) {
 
 async function adminPanelBaslat() {
 
-    console.log("Admin panel başlatılıyor...");
+    console.log(
+        "Admin panel başlatılıyor..."
+    );
 
 
-    /* SUPABASE */
+    /* ======================================================
+       SUPABASE KONTROLÜ
+    ====================================================== */
 
-    if (typeof supabaseClient === "undefined") {
+    if (
+        typeof supabaseClient ===
+        "undefined"
+    ) {
 
         console.error(
             "supabaseClient bulunamadı."
@@ -150,16 +261,57 @@ async function adminPanelBaslat() {
     }
 
 
-    /* OTURUM */
+    /* ======================================================
+       OTURUM KONTROLÜ
+    ====================================================== */
 
-    const { data, error } =
-        await supabaseClient.auth.getSession();
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .getSession();
 
 
-    if (error) {
+        if (error) {
+
+            console.error(
+                "Oturum kontrol hatası:",
+                error
+            );
+
+            return;
+        }
+
+
+        if (!data.session) {
+
+            console.warn(
+                "Aktif oturum bulunamadı."
+            );
+
+
+            window.location.href =
+                "admin-login.html";
+
+
+            return;
+        }
+
+
+        console.log(
+            "Admin oturumu aktif:",
+            data.session.user.email
+        );
+
+    }
+
+    catch (error) {
 
         console.error(
-            "Oturum kontrol hatası:",
+            "Oturum kontrolünde beklenmeyen hata:",
             error
         );
 
@@ -167,34 +319,23 @@ async function adminPanelBaslat() {
     }
 
 
-    if (!data.session) {
+    /* ======================================================
+       SAYFALAR
+    ====================================================== */
 
-        window.location.href =
-            "admin-login.html";
-
-        return;
-    }
-
-
-    console.log(
-        "Admin oturumu aktif:",
-        data.session.user.email
-    );
+    const pages =
+        document.querySelectorAll(
+            ".main-content .page"
+        );
 
 
     /* ======================================================
-       MENÜLER
+       SOL MENÜ
     ====================================================== */
 
     const menuItems =
         document.querySelectorAll(
             ".sidebar .menu-item[data-page]"
-        );
-
-
-    const pages =
-        document.querySelectorAll(
-            ".main-content .page"
         );
 
 
@@ -209,6 +350,10 @@ async function adminPanelBaslat() {
         pages.length
     );
 
+
+    /* ======================================================
+       SOL MENÜ TIKLAMA
+    ====================================================== */
 
     menuItems.forEach(function (menuItem) {
 
@@ -233,16 +378,18 @@ async function adminPanelBaslat() {
 
                 /* TÜM SAYFALARI KAPAT */
 
-                pages.forEach(function (page) {
+                pages.forEach(
+                    function (page) {
 
-                    page.classList.remove(
-                        "active-page"
-                    );
+                        page.classList.remove(
+                            "active-page"
+                        );
 
-                });
+                    }
+                );
 
 
-                /* HEDEF SAYFAYI AÇ */
+                /* HEDEF SAYFAYI BUL */
 
                 const targetPage =
                     document.getElementById(
@@ -261,23 +408,27 @@ async function adminPanelBaslat() {
                 }
 
 
+                /* HEDEF SAYFAYI AÇ */
+
                 targetPage.classList.add(
                     "active-page"
                 );
 
 
-                /* MENÜLERİ TEMİZLE */
+                /* TÜM MENÜLERİ PASİF YAP */
 
-                menuItems.forEach(function (item) {
+                menuItems.forEach(
+                    function (item) {
 
-                    item.classList.remove(
-                        "active"
-                    );
+                        item.classList.remove(
+                            "active"
+                        );
 
-                });
+                    }
+                );
 
 
-                /* SEÇİLEN MENÜ */
+                /* SEÇİLEN MENÜYÜ AKTİF YAP */
 
                 menuItem.classList.add(
                     "active"
@@ -290,7 +441,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       DASHBOARD HIZLI BUTONLARI
+       DASHBOARD HIZLI İŞLEMLER
     ====================================================== */
 
     const quickButtons =
@@ -299,71 +450,101 @@ async function adminPanelBaslat() {
         );
 
 
-    quickButtons.forEach(function (button) {
+    quickButtons.forEach(
+        function (button) {
 
-        button.addEventListener(
-            "click",
-            function () {
+            button.addEventListener(
+                "click",
+                function (e) {
 
-                const pageId =
-                    button.getAttribute(
-                        "data-page"
-                    );
+                    e.preventDefault();
 
 
-                pages.forEach(function (page) {
-
-                    page.classList.remove(
-                        "active-page"
-                    );
-
-                });
+                    const pageId =
+                        button.getAttribute(
+                            "data-page"
+                        );
 
 
-                const targetPage =
-                    document.getElementById(
+                    console.log(
+                        "Hızlı işlem:",
                         pageId
                     );
 
 
-                if (targetPage) {
+                    /* TÜM SAYFALARI KAPAT */
+
+                    pages.forEach(
+                        function (page) {
+
+                            page.classList.remove(
+                                "active-page"
+                            );
+
+                        }
+                    );
+
+
+                    /* HEDEF SAYFAYI BUL */
+
+                    const targetPage =
+                        document.getElementById(
+                            pageId
+                        );
+
+
+                    if (!targetPage) {
+
+                        console.error(
+                            "Sayfa bulunamadı:",
+                            pageId
+                        );
+
+                        return;
+                    }
+
+
+                    /* HEDEF SAYFAYI AÇ */
 
                     targetPage.classList.add(
                         "active-page"
                     );
 
-                }
+
+                    /* SIDEBAR AKTİF MENÜ */
+
+                    menuItems.forEach(
+                        function (item) {
+
+                            item.classList.remove(
+                                "active"
+                            );
 
 
-                menuItems.forEach(function (item) {
+                            if (
+                                item.getAttribute(
+                                    "data-page"
+                                ) === pageId
+                            ) {
 
-                    item.classList.remove(
-                        "active"
+                                item.classList.add(
+                                    "active"
+                                );
+
+                            }
+
+                        }
                     );
 
+                }
+            );
 
-                    if (
-                        item.getAttribute(
-                            "data-page"
-                        ) === pageId
-                    ) {
-
-                        item.classList.add(
-                            "active"
-                        );
-
-                    }
-
-                });
-
-            }
-        );
-
-    });
+        }
+    );
 
 
     /* ======================================================
-       YENİ ÜRÜN
+       YENİ ÜRÜN BUTONU
     ====================================================== */
 
     const newProductButton =
@@ -383,15 +564,27 @@ async function adminPanelBaslat() {
         productFormBox
     ) {
 
+        console.log(
+            "Yeni Ürün butonu bulundu."
+        );
+
+
         newProductButton.addEventListener(
             "click",
             function () {
 
+                console.log(
+                    "Yeni Ürün butonuna basıldı."
+                );
+
+
                 productFormBox.style.display =
                     "block";
 
+
                 newProductButton.style.display =
                     "none";
+
 
                 productFormBox.scrollIntoView({
                     behavior: "smooth",
@@ -405,7 +598,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       VAZGEÇ
+       VAZGEÇ BUTONU
     ====================================================== */
 
     const cancelProductButton =
@@ -420,15 +613,27 @@ async function adminPanelBaslat() {
         newProductButton
     ) {
 
+        console.log(
+            "Vazgeç butonu bulundu."
+        );
+
+
         cancelProductButton.addEventListener(
             "click",
             function () {
 
+                console.log(
+                    "Ürün formu kapatılıyor."
+                );
+
+
                 productFormBox.style.display =
                     "none";
 
+
                 newProductButton.style.display =
                     "inline-block";
+
 
                 const productForm =
                     document.getElementById(
@@ -464,7 +669,27 @@ async function adminPanelBaslat() {
             "click",
             async function () {
 
-                await supabaseClient.auth.signOut();
+                console.log(
+                    "Çıkış yapılıyor..."
+                );
+
+
+                try {
+
+                    await supabaseClient.auth
+                        .signOut();
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Çıkış hatası:",
+                        error
+                    );
+
+                }
+
 
                 window.location.href =
                     "admin-login.html";
