@@ -9,30 +9,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("DOM hazır.");
 
-
     /* ======================================================
-       GİRİŞ SAYFASI
+       GİRİŞ FORMU
     ====================================================== */
 
-    const loginForm =
-        document.getElementById("loginForm");
-
+    const loginForm = document.getElementById("loginForm");
 
     if (loginForm) {
 
-        console.log("Giriş sayfası bulundu.");
-
+        console.log("Giriş formu bulundu.");
 
         loginForm.addEventListener(
             "submit",
             girisYap
         );
-
-
-        console.log(
-            "Giriş formu submit eventi bağlandı."
-        );
-
 
         return;
     }
@@ -43,17 +33,11 @@ document.addEventListener("DOMContentLoaded", function () {
     ====================================================== */
 
     const adminContainer =
-        document.querySelector(
-            ".admin-container"
-        );
-
+        document.querySelector(".admin-container");
 
     if (adminContainer) {
 
-        console.log(
-            "Admin paneli bulundu."
-        );
-
+        console.log("Admin paneli bulundu.");
 
         adminPanelBaslat();
 
@@ -63,50 +47,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /* ==========================================================
-   GİRİŞ
+   GİRİŞ YAP
 ========================================================== */
 
 async function girisYap(e) {
 
     e.preventDefault();
 
-
-    console.log(
-        "Giriş butonuna basıldı."
-    );
+    console.log("Giriş deneniyor...");
 
 
     const emailElement =
         document.getElementById("email");
 
-
     const passwordElement =
         document.getElementById("password");
 
-
     const mesaj =
-        document.getElementById(
-            "loginMessage"
-        );
+        document.getElementById("loginMessage");
 
 
-    if (
-        !emailElement ||
-        !passwordElement
-    ) {
+    if (!emailElement || !passwordElement) {
 
         console.error(
             "E-posta veya şifre alanı bulunamadı."
         );
-
-
-        if (mesaj) {
-
-            mesaj.textContent =
-                "Giriş alanları bulunamadı.";
-
-        }
-
 
         return;
     }
@@ -115,20 +80,20 @@ async function girisYap(e) {
     const email =
         emailElement.value.trim();
 
-
     const password =
         passwordElement.value;
 
 
     if (mesaj) {
 
-        mesaj.textContent = "";
+        mesaj.textContent =
+            "Giriş yapılıyor...";
 
     }
 
 
     /* ======================================================
-       SUPABASE KONTROLÜ
+       SUPABASE KONTROL
     ====================================================== */
 
     if (
@@ -140,7 +105,6 @@ async function girisYap(e) {
             "supabaseClient bulunamadı."
         );
 
-
         if (mesaj) {
 
             mesaj.textContent =
@@ -148,15 +112,18 @@ async function girisYap(e) {
 
         }
 
-
         return;
     }
 
 
+    /* ======================================================
+       SUPABASE GİRİŞ
+    ====================================================== */
+
     try {
 
         console.log(
-            "Supabase giriş deneniyor..."
+            "Supabase signInWithPassword çalışıyor..."
         );
 
 
@@ -164,22 +131,25 @@ async function girisYap(e) {
             data,
             error
         } =
-            await supabaseClient.auth
-                .signInWithPassword({
+            await supabaseClient.auth.signInWithPassword({
 
-                    email: email,
+                email: email,
 
-                    password: password
+                password: password
 
-                });
+            });
 
 
         console.log(
-            "Supabase giriş cevabı:",
+            "Supabase sonucu:",
             data,
             error
         );
 
+
+        /* ==================================================
+           HATA
+        ================================================== */
 
         if (error) {
 
@@ -188,27 +158,45 @@ async function girisYap(e) {
                 error
             );
 
-
             if (mesaj) {
 
                 mesaj.textContent =
-                    error.message;
+                    error.message ||
+                    "E-posta veya şifre hatalı.";
 
             }
-
 
             return;
         }
 
 
-        console.log(
-            "Giriş başarılı:",
+        /* ==================================================
+           BAŞARILI
+        ================================================== */
+
+        if (
+            data &&
             data.user
-        );
+        ) {
+
+            console.log(
+                "Giriş başarılı:",
+                data.user.email
+            );
 
 
-        window.location.href =
-            "admin.html";
+            if (mesaj) {
+
+                mesaj.textContent =
+                    "Giriş başarılı. Panel açılıyor...";
+
+            }
+
+
+            window.location.href =
+                "admin.html";
+
+        }
 
     }
 
@@ -224,7 +212,7 @@ async function girisYap(e) {
 
             mesaj.textContent =
                 error.message ||
-                "Beklenmeyen bir hata oluştu.";
+                "Giriş sırasında bir hata oluştu.";
 
         }
 
@@ -234,7 +222,7 @@ async function girisYap(e) {
 
 
 /* ==========================================================
-   ADMİN PANELİ
+   ADMİN PANELİ BAŞLAT
 ========================================================== */
 
 async function adminPanelBaslat() {
@@ -245,7 +233,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       SUPABASE KONTROLÜ
+       SUPABASE KONTROL
     ====================================================== */
 
     if (
@@ -271,8 +259,7 @@ async function adminPanelBaslat() {
             data,
             error
         } =
-            await supabaseClient.auth
-                .getSession();
+            await supabaseClient.auth.getSession();
 
 
         if (error) {
@@ -286,7 +273,10 @@ async function adminPanelBaslat() {
         }
 
 
-        if (!data.session) {
+        if (
+            !data ||
+            !data.session
+        ) {
 
             console.warn(
                 "Aktif oturum bulunamadı."
@@ -295,7 +285,6 @@ async function adminPanelBaslat() {
 
             window.location.href =
                 "admin-login.html";
-
 
             return;
         }
@@ -311,7 +300,7 @@ async function adminPanelBaslat() {
     catch (error) {
 
         console.error(
-            "Oturum kontrolünde beklenmeyen hata:",
+            "Oturum kontrolünde hata:",
             error
         );
 
@@ -352,7 +341,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       SOL MENÜ TIKLAMA
+       MENÜ TIKLAMA
     ====================================================== */
 
     menuItems.forEach(function (menuItem) {
@@ -378,18 +367,16 @@ async function adminPanelBaslat() {
 
                 /* TÜM SAYFALARI KAPAT */
 
-                pages.forEach(
-                    function (page) {
+                pages.forEach(function (page) {
 
-                        page.classList.remove(
-                            "active-page"
-                        );
+                    page.classList.remove(
+                        "active-page"
+                    );
 
-                    }
-                );
+                });
 
 
-                /* HEDEF SAYFAYI BUL */
+                /* HEDEF SAYFA */
 
                 const targetPage =
                     document.getElementById(
@@ -408,8 +395,6 @@ async function adminPanelBaslat() {
                 }
 
 
-                /* HEDEF SAYFAYI AÇ */
-
                 targetPage.classList.add(
                     "active-page"
                 );
@@ -417,18 +402,16 @@ async function adminPanelBaslat() {
 
                 /* TÜM MENÜLERİ PASİF YAP */
 
-                menuItems.forEach(
-                    function (item) {
+                menuItems.forEach(function (item) {
 
-                        item.classList.remove(
-                            "active"
-                        );
+                    item.classList.remove(
+                        "active"
+                    );
 
-                    }
-                );
+                });
 
 
-                /* SEÇİLEN MENÜYÜ AKTİF YAP */
+                /* SEÇİLEN MENÜ */
 
                 menuItem.classList.add(
                     "active"
@@ -450,97 +433,79 @@ async function adminPanelBaslat() {
         );
 
 
-    quickButtons.forEach(
-        function (button) {
+    quickButtons.forEach(function (button) {
 
-            button.addEventListener(
-                "click",
-                function (e) {
+        button.addEventListener(
+            "click",
+            function () {
 
-                    e.preventDefault();
-
-
-                    const pageId =
-                        button.getAttribute(
-                            "data-page"
-                        );
+                const pageId =
+                    button.getAttribute(
+                        "data-page"
+                    );
 
 
-                    console.log(
-                        "Hızlı işlem:",
+                console.log(
+                    "Hızlı işlem:",
+                    pageId
+                );
+
+
+                /* TÜM SAYFALARI KAPAT */
+
+                pages.forEach(function (page) {
+
+                    page.classList.remove(
+                        "active-page"
+                    );
+
+                });
+
+
+                /* HEDEF SAYFA */
+
+                const targetPage =
+                    document.getElementById(
                         pageId
                     );
 
 
-                    /* TÜM SAYFALARI KAPAT */
-
-                    pages.forEach(
-                        function (page) {
-
-                            page.classList.remove(
-                                "active-page"
-                            );
-
-                        }
-                    );
-
-
-                    /* HEDEF SAYFAYI BUL */
-
-                    const targetPage =
-                        document.getElementById(
-                            pageId
-                        );
-
-
-                    if (!targetPage) {
-
-                        console.error(
-                            "Sayfa bulunamadı:",
-                            pageId
-                        );
-
-                        return;
-                    }
-
-
-                    /* HEDEF SAYFAYI AÇ */
+                if (targetPage) {
 
                     targetPage.classList.add(
                         "active-page"
                     );
 
-
-                    /* SIDEBAR AKTİF MENÜ */
-
-                    menuItems.forEach(
-                        function (item) {
-
-                            item.classList.remove(
-                                "active"
-                            );
+                }
 
 
-                            if (
-                                item.getAttribute(
-                                    "data-page"
-                                ) === pageId
-                            ) {
+                /* MENÜLERİ GÜNCELLE */
 
-                                item.classList.add(
-                                    "active"
-                                );
+                menuItems.forEach(function (item) {
 
-                            }
-
-                        }
+                    item.classList.remove(
+                        "active"
                     );
 
-                }
-            );
 
-        }
-    );
+                    if (
+                        item.getAttribute(
+                            "data-page"
+                        ) === pageId
+                    ) {
+
+                        item.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                });
+
+            }
+        );
+
+    });
 
 
     /* ======================================================
@@ -565,7 +530,7 @@ async function adminPanelBaslat() {
     ) {
 
         console.log(
-            "Yeni Ürün butonu bulundu."
+            "Yeni ürün sistemi hazır."
         );
 
 
@@ -574,7 +539,7 @@ async function adminPanelBaslat() {
             function () {
 
                 console.log(
-                    "Yeni Ürün butonuna basıldı."
+                    "Yeni Ürün tıklandı."
                 );
 
 
@@ -598,7 +563,7 @@ async function adminPanelBaslat() {
 
 
     /* ======================================================
-       VAZGEÇ BUTONU
+       VAZGEÇ
     ====================================================== */
 
     const cancelProductButton =
@@ -613,17 +578,12 @@ async function adminPanelBaslat() {
         newProductButton
     ) {
 
-        console.log(
-            "Vazgeç butonu bulundu."
-        );
-
-
         cancelProductButton.addEventListener(
             "click",
             function () {
 
                 console.log(
-                    "Ürün formu kapatılıyor."
+                    "Ürün ekleme iptal edildi."
                 );
 
 
@@ -676,15 +636,27 @@ async function adminPanelBaslat() {
 
                 try {
 
-                    await supabaseClient.auth
-                        .signOut();
+                    const {
+                        error
+                    } =
+                        await supabaseClient.auth.signOut();
+
+
+                    if (error) {
+
+                        console.error(
+                            "Çıkış hatası:",
+                            error
+                        );
+
+                    }
 
                 }
 
                 catch (error) {
 
                     console.error(
-                        "Çıkış hatası:",
+                        "Çıkış sırasında hata:",
                         error
                     );
 
