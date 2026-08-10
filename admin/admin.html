@@ -17,441 +17,21 @@
         href="admin.css"
     >
 
-    <style>
-
-        /* ==========================================================
-           RESİM YÖNETİMİ BUTONU
-        ========================================================== */
-
-        .quick-actions .image-management-button {
-
-            color: #D4AF37 !important;
-
-            -webkit-text-fill-color: #D4AF37 !important;
-
-            border: 1px solid #D4AF37 !important;
-
-            background: #111111 !important;
-
-            font-weight: 600;
-
-        }
-
-        .quick-actions .image-management-button:hover {
-
-            color: #D4AF37 !important;
-
-            -webkit-text-fill-color: #D4AF37 !important;
-
-            border-color: #D4AF37 !important;
-
-            background: #1b1b1b !important;
-
-        }
-
-
-        /* ==========================================================
-           RESİM YÖNETİMİ
-        ========================================================== */
-
-        .image-manager {
-
-            width: 100%;
-
-        }
-
-
-        .image-upload-box {
-
-            border: 1px solid #e1e1e1;
-
-            border-radius: 10px;
-
-            padding: 25px;
-
-            background: #ffffff;
-
-            margin-bottom: 25px;
-
-        }
-
-
-        .image-upload-grid {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    2,
-                    minmax(0, 1fr)
-                );
-
-            gap: 20px;
-
-        }
-
-
-        .image-upload-field {
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 8px;
-
-        }
-
-
-        .image-upload-field label {
-
-            font-weight: 600;
-
-            color: #222;
-
-        }
-
-
-        .image-upload-field select,
-        .image-upload-field input[type="file"] {
-
-            width: 100%;
-
-            padding: 11px;
-
-            border: 1px solid #d8d8d8;
-
-            border-radius: 7px;
-
-            background: #fff;
-
-            box-sizing: border-box;
-
-        }
-
-
-        .image-preview-area {
-
-            margin-top: 20px;
-
-            display: none;
-
-            border: 1px dashed #D4AF37;
-
-            border-radius: 10px;
-
-            padding: 20px;
-
-            text-align: center;
-
-            background: #fafafa;
-
-        }
-
-
-        .image-preview-area img {
-
-            max-width: 300px;
-
-            max-height: 250px;
-
-            width: auto;
-
-            height: auto;
-
-            border-radius: 8px;
-
-            object-fit: contain;
-
-        }
-
-
-        .image-preview-name {
-
-            margin-top: 10px;
-
-            color: #555;
-
-            font-size: 14px;
-
-        }
-
-
-        .image-upload-actions {
-
-            display: flex;
-
-            gap: 10px;
-
-            margin-top: 20px;
-
-            flex-wrap: wrap;
-
-        }
-
-
-        .gold-image-button {
-
-            border: 1px solid #D4AF37;
-
-            background: #D4AF37;
-
-            color: #111111;
-
-            padding: 11px 20px;
-
-            border-radius: 7px;
-
-            cursor: pointer;
-
-            font-weight: 700;
-
-        }
-
-
-        .gold-image-button:hover {
-
-            background: #c5a12f;
-
-        }
-
-
-        .outline-image-button {
-
-            border: 1px solid #D4AF37;
-
-            background: #111111;
-
-            color: #D4AF37 !important;
-
-            -webkit-text-fill-color: #D4AF37 !important;
-
-            padding: 11px 20px;
-
-            border-radius: 7px;
-
-            cursor: pointer;
-
-            font-weight: 600;
-
-        }
-
-
-        .outline-image-button:hover {
-
-            background: #1b1b1b;
-
-            color: #D4AF37 !important;
-
-        }
-
-
-        .image-message {
-
-            display: none;
-
-            margin-top: 15px;
-
-            padding: 12px;
-
-            border-radius: 7px;
-
-            font-size: 14px;
-
-        }
-
-
-        .image-message.success {
-
-            display: block;
-
-            border: 1px solid #4caf50;
-
-            background: #f0fff4;
-
-            color: #216e39;
-
-        }
-
-
-        .image-message.error {
-
-            display: block;
-
-            border: 1px solid #d9534f;
-
-            background: #fff5f5;
-
-            color: #a94442;
-
-        }
-
-
-        .image-list-box {
-
-            border: 1px solid #e1e1e1;
-
-            border-radius: 10px;
-
-            padding: 25px;
-
-            background: #ffffff;
-
-        }
-
-
-        .image-grid {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    auto-fill,
-                    minmax(180px, 1fr)
-                );
-
-            gap: 20px;
-
-            margin-top: 20px;
-
-        }
-
-
-        .image-card {
-
-            border: 1px solid #e1e1e1;
-
-            border-radius: 10px;
-
-            overflow: hidden;
-
-            background: #fff;
-
-        }
-
-
-        .image-card-preview {
-
-            width: 100%;
-
-            height: 180px;
-
-            background: #f7f7f7;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            overflow: hidden;
-
-        }
-
-
-        .image-card-preview img {
-
-            width: 100%;
-
-            height: 100%;
-
-            object-fit: cover;
-
-        }
-
-
-        .image-card-info {
-
-            padding: 12px;
-
-        }
-
-
-        .image-card-name {
-
-            font-size: 14px;
-
-            font-weight: 600;
-
-            word-break: break-word;
-
-            margin-bottom: 8px;
-
-        }
-
-
-        .image-card-folder {
-
-            font-size: 12px;
-
-            color: #777;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .delete-image-button {
-
-            width: 100%;
-
-            padding: 8px 10px;
-
-            border: 1px solid #d9534f;
-
-            background: #fff;
-
-            color: #d9534f;
-
-            border-radius: 6px;
-
-            cursor: pointer;
-
-            font-weight: 600;
-
-        }
-
-
-        .delete-image-button:hover {
-
-            background: #fff5f5;
-
-        }
-
-
-        @media (max-width: 700px) {
-
-            .image-upload-grid {
-
-                grid-template-columns: 1fr;
-
-            }
-
-            .image-grid {
-
-                grid-template-columns:
-                    repeat(
-                        2,
-                        minmax(0, 1fr)
-                    );
-
-            }
-
-        }
-
-    </style>
-
 </head>
 
 
 <body>
 
+<!-- ==================================================
+     ADMİN PANELİ
+================================================== -->
 
 <div class="admin-container">
 
 
     <!-- ==================================================
          SOL MENÜ
-    =================================================== -->
+    ================================================== -->
 
     <aside class="sidebar">
 
@@ -530,16 +110,17 @@
     </aside>
 
 
+
     <!-- ==================================================
          ANA İÇERİK
-    =================================================== -->
+    ================================================== -->
 
     <main class="main-content">
 
 
         <!-- ==================================================
              DASHBOARD
-        =================================================== -->
+        ================================================== -->
 
         <section
             class="page active-page"
@@ -561,7 +142,10 @@
             </div>
 
 
-            <!-- İSTATİSTİKLER -->
+
+            <!-- ==================================================
+                 İSTATİSTİKLER
+            ================================================== -->
 
             <div class="stats-grid">
 
@@ -587,6 +171,7 @@
                 </div>
 
 
+
                 <div class="stat-card">
 
                     <div class="stat-icon">
@@ -608,6 +193,7 @@
                 </div>
 
 
+
                 <div class="stat-card">
 
                     <div class="stat-icon">
@@ -627,6 +213,7 @@
                     </div>
 
                 </div>
+
 
 
                 <div class="stat-card">
@@ -652,13 +239,20 @@
             </div>
 
 
-            <!-- HIZLI İŞLEMLER -->
+
+            <!-- ==================================================
+                 HIZLI İŞLEMLER
+            ================================================== -->
 
             <div class="dashboard-box">
 
-                <h2>Hızlı İşlemler</h2>
+                <h2>
+                    Hızlı İşlemler
+                </h2>
+
 
                 <div class="quick-actions">
+
 
                     <button
                         type="button"
@@ -669,13 +263,21 @@
                     </button>
 
 
+
                     <button
                         type="button"
-                        class="outline-button image-management-button"
+                        class="gold-button"
                         data-page="imagesPage"
+                        style="
+                            color:#D4AF37 !important;
+                            background:#111111 !important;
+                            border:1px solid #D4AF37 !important;
+                            font-weight:600;
+                        "
                     >
                         Resim Yönetimi
                     </button>
+
 
                 </div>
 
@@ -687,18 +289,21 @@
 
         <!-- ==================================================
              ÜRÜNLER
-        =================================================== -->
+        ================================================== -->
 
         <section
             class="page"
             id="productsPage"
         >
 
+
             <div class="page-header">
 
                 <div>
 
-                    <h1>Ürünler</h1>
+                    <h1>
+                        Ürünler
+                    </h1>
 
                     <p>
                         Ürünlerinizi buradan yönetin.
@@ -718,13 +323,17 @@
             </div>
 
 
-            <!-- YENİ ÜRÜN FORMU -->
+
+            <!-- ==================================================
+                 YENİ ÜRÜN FORMU
+            ================================================== -->
 
             <div
                 class="content-box"
                 id="productFormBox"
-                style="display: none;"
+                style="display:none;"
             >
+
 
                 <div class="form-header">
 
@@ -743,10 +352,14 @@
                 </div>
 
 
+
                 <form id="productForm">
+
 
                     <div class="product-form-grid">
 
+
+                        <!-- ÜRÜN ADI -->
 
                         <div class="form-group">
 
@@ -763,6 +376,9 @@
 
                         </div>
 
+
+
+                        <!-- KATEGORİ -->
 
                         <div class="form-group">
 
@@ -804,6 +420,9 @@
                         </div>
 
 
+
+                        <!-- ÖLÇÜ -->
+
                         <div class="form-group">
 
                             <label for="productSize">
@@ -818,6 +437,9 @@
 
                         </div>
 
+
+
+                        <!-- FİYAT -->
 
                         <div class="form-group">
 
@@ -836,9 +458,12 @@
                         </div>
 
 
+
+                        <!-- AÇIKLAMA -->
+
                         <div
                             class="form-group"
-                            style="grid-column: 1 / -1;"
+                            style="grid-column:1 / -1;"
                         >
 
                             <label for="productDescription">
@@ -853,6 +478,9 @@
 
                         </div>
 
+
+
+                        <!-- DURUM -->
 
                         <div class="form-group">
 
@@ -874,10 +502,15 @@
 
                         </div>
 
+
                     </div>
 
 
+
+                    <!-- FORM BUTONLARI -->
+
                     <div class="form-actions">
+
 
                         <button
                             type="submit"
@@ -885,6 +518,7 @@
                         >
                             Ürünü Kaydet
                         </button>
+
 
 
                         <button
@@ -895,19 +529,25 @@
                             Vazgeç
                         </button>
 
+
                     </div>
+
 
                 </form>
 
             </div>
 
 
-            <!-- ÜRÜN LİSTESİ -->
+
+            <!-- ==================================================
+                 ÜRÜN LİSTESİ
+            ================================================== -->
 
             <div
                 class="content-box"
                 id="productListBox"
             >
+
 
                 <div class="list-header">
 
@@ -934,6 +574,7 @@
                 </div>
 
 
+
                 <div
                     class="product-list"
                     id="productList"
@@ -958,6 +599,7 @@
 
                 </div>
 
+
             </div>
 
         </section>
@@ -966,12 +608,13 @@
 
         <!-- ==================================================
              RESİMLER
-        =================================================== -->
+        ================================================== -->
 
         <section
             class="page"
             id="imagesPage"
         >
+
 
             <div class="page-header">
 
@@ -982,7 +625,7 @@
                     </h1>
 
                     <p>
-                        Site ve ürün resimlerini buradan yönetin.
+                        Site resimlerini buradan yönetin.
                     </p>
 
                 </div>
@@ -990,191 +633,243 @@
             </div>
 
 
-            <div class="image-manager">
+
+            <!-- ==================================================
+                 RESİM YÜKLEME
+            ================================================== -->
+
+            <div class="content-box">
 
 
-                <!-- ==================================================
-                     RESİM YÜKLEME
-                =================================================== -->
+                <div class="form-header">
 
-                <div class="image-upload-box">
+                    <div>
 
-                    <h2>
-                        Yeni Resim Yükle
-                    </h2>
+                        <h2>
+                            Yeni Resim Yükle
+                        </h2>
 
-                    <p>
-                        Resmi seçin, hangi kategoriye ait olduğunu belirleyin
-                        ve Supabase Storage'a yükleyin.
+                        <p>
+                            Siteye eklemek istediğiniz resmi seçin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DOSYA -->
+
+                <div class="form-group">
+
+                    <label for="imageFile">
+                        Resim Dosyası
+                    </label>
+
+                    <input
+                        type="file"
+                        id="imageFile"
+                        accept="image/jpeg,image/png,image/webp,image/jpg"
+                    >
+
+                </div>
+
+
+
+                <!-- KATEGORİ -->
+
+                <div
+                    class="form-group"
+                    style="margin-top:20px;"
+                >
+
+                    <label for="imageCategory">
+                        Resim Kategorisi
+                    </label>
+
+                    <select id="imageCategory">
+
+                        <option value="">
+                            Kategori seçiniz
+                        </option>
+
+                        <option value="Halılar">
+                            Halılar
+                        </option>
+
+                        <option value="Klasik Yolluklar">
+                            Klasik Yolluklar
+                        </option>
+
+                        <option value="Sisal">
+                            Sisal
+                        </option>
+
+                        <option value="Kaymaz">
+                            Kaymaz
+                        </option>
+
+                        <option value="Özel Kesim">
+                            Özel Kesim
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- ÖNİZLEME -->
+
+                <div
+                    id="imagePreviewBox"
+                    style="
+                        display:none;
+                        margin-top:20px;
+                    "
+                >
+
+                    <p
+                        style="
+                            margin-bottom:10px;
+                            font-weight:600;
+                        "
+                    >
+                        Önizleme
                     </p>
 
 
-                    <div class="image-upload-grid">
-
-
-                        <div class="image-upload-field">
-
-                            <label for="imageCategory">
-                                Kategori
-                            </label>
-
-                            <select id="imageCategory">
-
-                                <option value="">
-                                    Kategori seçiniz
-                                </option>
-
-                                <option value="Halılar">
-                                    Halılar
-                                </option>
-
-                                <option value="Klasik Yolluklar">
-                                    Klasik Yolluklar
-                                </option>
-
-                                <option value="Sisal">
-                                    Sisal
-                                </option>
-
-                                <option value="Kaymaz">
-                                    Kaymaz
-                                </option>
-
-                                <option value="Özel Kesim">
-                                    Özel Kesim
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="image-upload-field">
-
-                            <label for="imageFile">
-                                Resim
-                            </label>
-
-                            <input
-                                type="file"
-                                id="imageFile"
-                                accept="image/jpeg,image/png,image/webp,image/jpg"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- ÖNİZLEME -->
-
-                    <div
-                        id="imagePreviewArea"
-                        class="image-preview-area"
+                    <img
+                        id="imagePreview"
+                        src=""
+                        alt="Resim önizleme"
+                        style="
+                            max-width:300px;
+                            max-height:250px;
+                            object-fit:contain;
+                            border:1px solid #D4AF37;
+                            border-radius:8px;
+                            padding:5px;
+                            background:#111;
+                        "
                     >
-
-                        <img
-                            id="imagePreview"
-                            src=""
-                            alt="Resim önizleme"
-                        >
-
-                        <div
-                            id="imagePreviewName"
-                            class="image-preview-name"
-                        ></div>
-
-                    </div>
-
-
-                    <!-- BUTONLAR -->
-
-                    <div class="image-upload-actions">
-
-                        <button
-                            type="button"
-                            id="uploadImageButton"
-                            class="gold-image-button"
-                        >
-                            Resmi Yükle
-                        </button>
-
-
-                        <button
-                            type="button"
-                            id="clearImageButton"
-                            class="outline-image-button"
-                        >
-                            Temizle
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        id="imageUploadMessage"
-                        class="image-message"
-                    ></div>
 
                 </div>
 
 
 
-                <!-- ==================================================
-                     YÜKLENEN RESİMLER
-                =================================================== -->
+                <!-- YÜKLE -->
 
-                <div class="image-list-box">
+                <div
+                    class="form-actions"
+                    style="margin-top:25px;"
+                >
 
-                    <div class="list-header">
+                    <button
+                        type="button"
+                        id="uploadImageButton"
+                        class="gold-button"
+                        style="
+                            color:#D4AF37 !important;
+                            background:#111111 !important;
+                            border:1px solid #D4AF37 !important;
+                            font-weight:600;
+                        "
+                    >
+                        Resmi Yükle
+                    </button>
 
-                        <div>
-
-                            <h2>
-                                Yüklenen Resimler
-                            </h2>
-
-                            <p>
-                                Supabase Storage içerisindeki resimler.
-                            </p>
-
-                        </div>
+                </div>
 
 
-                        <div
-                            class="product-count"
-                            id="imageCount"
-                        >
-                            0 resim
-                        </div>
+
+                <!-- MESAJ -->
+
+                <div
+                    id="imageUploadMessage"
+                    style="
+                        display:none;
+                        margin-top:15px;
+                        padding:12px;
+                        border-radius:8px;
+                    "
+                ></div>
+
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 YÜKLÜ RESİMLER
+            ================================================== -->
+
+            <div
+                class="content-box"
+                style="margin-top:20px;"
+            >
+
+
+                <div class="list-header">
+
+                    <div>
+
+                        <h2>
+                            Yüklü Resimler
+                        </h2>
+
+                        <p>
+                            Sisteme yüklenen resimler burada
+                            görüntülenecek.
+                        </p>
 
                     </div>
 
 
                     <div
-                        id="imageList"
-                        class="image-grid"
+                        class="product-count"
+                        id="imageCount"
                     >
-
-                        <div class="empty-state">
-
-                            <div class="empty-icon">
-                                ▧
-                            </div>
-
-                            <h2>
-                                Henüz resim bulunmuyor
-                            </h2>
-
-                            <p>
-                                Yukarıdaki alanı kullanarak ilk resminizi yükleyebilirsiniz.
-                            </p>
-
-                        </div>
-
+                        0 resim
                     </div>
 
                 </div>
+
+
+
+                <div
+                    id="imageList"
+                    style="
+                        display:grid;
+                        grid-template-columns:
+                            repeat(auto-fill,minmax(220px,1fr));
+                        gap:20px;
+                        margin-top:20px;
+                    "
+                >
+
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            ▧
+                        </div>
+
+                        <h2>
+                            Henüz resim bulunmuyor
+                        </h2>
+
+                        <p>
+                            Yukarıdaki alandan ilk resminizi
+                            yükleyebilirsiniz.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
 
             </div>
 
@@ -1184,12 +879,13 @@
 
         <!-- ==================================================
              SİTE AYARLARI
-        =================================================== -->
+        ================================================== -->
 
         <section
             class="page"
             id="settingsPage"
         >
+
 
             <div class="page-header">
 
@@ -1208,7 +904,9 @@
             </div>
 
 
+
             <div class="content-box">
+
 
                 <div class="empty-state">
 
@@ -1227,6 +925,7 @@
 
                 </div>
 
+
             </div>
 
         </section>
@@ -1234,18 +933,8 @@
 
     </main>
 
+
 </div>
-
-
-<!-- ==================================================
-     SUPABASE
-================================================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="../js/supabase.js"></script>
-
-<script src="admin.js"></script>
 
 
 </body>
