@@ -1060,21 +1060,25 @@ async function adminPanelBaslat() {
                                     "
                                 >
 
-                                   <button
+                                  <button
     type="button"
     class="outline-button edit-product-button"
     data-id="${escapeHTML(product.id)}"
     style="
         padding:8px 12px;
         cursor:pointer;
-        color:#D4AF37;
-        border:1px solid #D4AF37;
-        background:transparent;
+        color:#D4AF37 !important;
+        -webkit-text-fill-color:#D4AF37 !important;
+        border:1px solid #D4AF37 !important;
+        background:transparent !important;
         border-radius:6px;
         font-weight:600;
     "
 >
-    Düzenle
+    <span style="
+        color:#D4AF37 !important;
+        -webkit-text-fill-color:#D4AF37 !important;
+    ">Düzenle</span>
 </button>
 
 
