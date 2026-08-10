@@ -2298,7 +2298,30 @@ async function adminPanelBaslat() {
                         guvenliDosyaAdi(
                             file.name
                         );
+const storageCategoryMap = {
+    "Halılar": "halilar",
+    "Klasik Yolluklar": "klasik-yolluklar",
+    "Sisal": "sisal",
+    "Kaymaz": "kaymaz",
+    "Özel Kesim": "ozel-kesim"
+};
 
+const storageCategory =
+    storageCategoryMap[category] ||
+    String(category || "")
+        .toLowerCase()
+        .replace(/ğ/g, "g")
+        .replace(/ü/g, "u")
+        .replace(/ş/g, "s")
+        .replace(/ı/g, "i")
+        .replace(/ö/g, "o")
+        .replace(/ç/g, "c")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+
+
+console.log("Storage dosya yolu:", filePath);
 
                     /*
                      * Ürüne özel klasör.
