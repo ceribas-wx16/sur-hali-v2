@@ -1,6 +1,7 @@
 /* ==========================================================
    SUR HALI İZNİK
    ANA SİTE JAVASCRIPT
+   SUPABASE ÜRÜN + RESİM SİSTEMİ
    ========================================================== */
 
 console.log("Sur Halı site.js başlatılıyor...");
@@ -11,6 +12,8 @@ console.log("Sur Halı site.js başlatılıyor...");
    ========================================================== */
 
 const WHATSAPP_NUMBER = "905396369095";
+
+const STORAGE_BUCKET = "category-images";
 
 const KATEGORILER = [
     "Halılar",
@@ -92,24 +95,108 @@ function whatsappLinkOlustur(product) {
 
 
 /* ==========================================================
+   RESİM URL'Sİ
+   ========================================================== */
+
+function resimUrlHazirla(image) {
+
+    if (!image) {
+        return "";
+    }
+
+    /*
+     * Öncelik:
+     * category_images.image_url
+     */
+
+    if (image.image_url) {
+        return image.image_url;
+    }
+
+    /*
+     * image_url yoksa:
+     * image_path üzerinden Supabase Storage
+     * public URL oluştur.
+     */
+
+    if (
+        image.image_path &&
+        typeof supabaseClient !== "undefined" &&
+        supabaseClient
+    ) {
+
+        try {
+
+            const {
+                data
+            } =
+                supabaseClient
+                    .storage
+                    .from(STORAGE_BUCKET)
+                    .getPublicUrl(
+                        image.image_path
+                    );
+
+            if (
+                data &&
+                data.publicUrl
+            ) {
+                return data.publicUrl;
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Storage resim URL'si oluşturulamadı:",
+                error
+            );
+        }
+    }
+
+    return "";
+}
+
+
+/* ==========================================================
    ÜRÜN RESMİ
    ========================================================== */
 
-function urunResmi(product, imagesMap) {
+function urunResmi(
+    product,
+    imagesMap
+) {
 
     const images =
         imagesMap[product.id] || [];
 
-    if (
-        images.length > 0 &&
-        images[0].image_url
-    ) {
-        return images[0].image_url;
+
+    /*
+     * Öncelik:
+     * category_images tablosundaki ilk resim
+     */
+
+    if (images.length > 0) {
+
+        const firstImage =
+            resimUrlHazirla(
+                images[0]
+            );
+
+        if (firstImage) {
+            return firstImage;
+        }
     }
+
+
+    /*
+     * Alternatif:
+     * products.image_url
+     */
 
     if (product.image_url) {
         return product.image_url;
     }
+
 
     return "";
 }
@@ -130,13 +217,15 @@ function urunKartiOlustur(
             imagesMap
         );
 
+
     const imageHTML = image
 
         ? `
             <img
                 src="${escapeHTML(image)}"
-                alt="${escapeHTML(product.name)}"
+                alt="${escapeHTML(product.name || "Sur Halı ürünü")}"
                 loading="lazy"
+                onerror="this.style.display='none'; this.parentElement.classList.add('no-image');"
             >
           `
 
@@ -173,7 +262,7 @@ function urunKartiOlustur(
                 </span>
 
 
-                <h3>
+                <h3 class="product-title">
                     ${escapeHTML(product.name || "Ürün")}
                 </h3>
 
@@ -191,7 +280,8 @@ function urunKartiOlustur(
 
                 ${
                     product.price !== null &&
-                    product.price !== undefined
+                    product.price !== undefined &&
+                    product.price !== ""
                     ? `
                         <div class="product-price">
                             ${fiyatFormatla(product.price)}
@@ -209,9 +299,9 @@ function urunKartiOlustur(
                     href="${escapeHTML(
                         whatsappLinkOlustur(product)
                     )}"
-                    class="product-whatsapp"
+                    class="whatsapp-button"
                     target="_blank"
-                    rel="noopener"
+                    rel="noopener noreferrer"
                 >
                     WhatsApp'tan Bilgi Al
                 </a>
@@ -225,7 +315,7 @@ function urunKartiOlustur(
 
 
 /* ==========================================================
-   ÜRÜN VERİLERİNİ GETİR
+   ÜRÜNLERİ SUPABASE'DEN GETİR
    ========================================================== */
 
 async function urunleriGetir() {
@@ -234,6 +324,21 @@ async function urunleriGetir() {
         "Supabase'den ürünler getiriliyor..."
     );
 
+
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+
+        throw new Error(
+            "Supabase bağlantısı bulunamadı."
+        );
+    }
+
+
+    /* ======================================================
+       ÜRÜNLER
+       ====================================================== */
 
     const {
         data: products,
@@ -286,7 +391,7 @@ async function urunleriGetir() {
 
 
     /* ======================================================
-       ÜRÜN RESİMLERİNİ GETİR
+       ÜRÜN RESİMLERİ
        ====================================================== */
 
     const {
@@ -348,6 +453,12 @@ async function urunleriGetir() {
     );
 
 
+    console.log(
+        Object.keys(imagesMap).length +
+        " ürün için resim verisi bulundu."
+    );
+
+
     return {
         products: aktifUrunler,
         imagesMap: imagesMap
@@ -356,17 +467,17 @@ async function urunleriGetir() {
 
 
 /* ==========================================================
-   KATEGORİLERİ OLUŞTUR
+   ANA SAYFA - ÖNE ÇIKAN ÜRÜNLER
    ========================================================== */
 
-function kategorileriOlustur(
+function oneCikanUrunleriOlustur(
     products,
     imagesMap
 ) {
 
     const container =
         document.getElementById(
-            "categoryProducts"
+            "featuredProducts"
         );
 
 
@@ -378,191 +489,311 @@ function kategorileriOlustur(
     container.innerHTML = "";
 
 
-    KATEGORILER.forEach(
-        function (category) {
+    if (
+        !products ||
+        products.length === 0
+    ) {
 
-            const categoryProducts =
-                products.filter(
-                    function (product) {
+        container.innerHTML = `
 
-                        return (
-                            product.category ===
-                            category
-                        );
+            <div class="empty-state">
 
-                    }
-                );
+                <h2>
+                    Koleksiyonlarımız hazırlanıyor
+                </h2>
 
+                <p>
+                    Çok yakında ürünlerimizi
+                    burada görebileceksiniz.
+                </p>
 
-            /*
-             * Kategoride ürün yoksa
-             * o bölümü göstermiyoruz.
-             */
+            </div>
 
-            if (
-                categoryProducts.length === 0
-            ) {
-                return;
-            }
+        `;
+
+        return;
+    }
 
 
-            const section =
-                document.createElement(
-                    "section"
-                );
+    container.innerHTML =
+        products
+            .map(
+                function (product) {
 
-
-            section.className =
-                "category-section";
-
-
-            section.id =
-                "kategori-" +
-                category
-                    .toLowerCase()
-                    .replace(
-                        /[^a-z0-9ğüşöçıİĞÜŞÖÇ]+/gi,
-                        "-"
+                    return urunKartiOlustur(
+                        product,
+                        imagesMap
                     );
 
-
-            section.innerHTML = `
-
-                <div class="container">
-
-                    <div class="section-heading">
-
-                        <span>
-                            SUR HALI
-                        </span>
-
-                        <h2>
-                            ${escapeHTML(category)}
-                        </h2>
-
-                        <p>
-                            ${categoryProducts.length}
-                            ürün
-                        </p>
-
-                    </div>
+                }
+            )
+            .join("");
 
 
-                    <div class="products-grid">
+    console.log(
+        "Ana sayfada " +
+        products.length +
+        " ürün gösterildi."
+    );
+}
 
-                        ${categoryProducts
-                            .map(
-                                function (product) {
 
-                                    return urunKartiOlustur(
-                                        product,
-                                        imagesMap
-                                    );
+/* ==========================================================
+   KATEGORİ SLUG
+   ========================================================== */
 
-                                }
-                            )
-                            .join("")
-                        }
+function kategoriSlugOlustur(
+    category
+) {
 
-                    </div>
+    return category
+        .toLowerCase()
+        .replace(
+            /ğ/g,
+            "g"
+        )
+        .replace(
+            /ü/g,
+            "u"
+        )
+        .replace(
+            /ş/g,
+            "s"
+        )
+        .replace(
+            /ı/g,
+            "i"
+        )
+        .replace(
+            /ö/g,
+            "o"
+        )
+        .replace(
+            /ç/g,
+            "c"
+        )
+        .replace(
+            /[^a-z0-9]+/g,
+            "-"
+        )
+        .replace(
+            /^-|-$/g,
+            ""
+        );
+}
+
+
+/* ==========================================================
+   KATALOG SAYFASI
+   ========================================================== */
+
+function katalogOlustur(
+    products,
+    imagesMap
+) {
+
+    const container =
+        document.getElementById(
+            "catalogProducts"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const filterButtons =
+        document.querySelectorAll(
+            ".category-filter"
+        );
+
+
+    const urlParams =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const urlCategory =
+        urlParams.get(
+            "category"
+        );
+
+
+    let aktifKategori =
+        urlCategory &&
+        KATEGORILER.includes(
+            urlCategory
+        )
+            ? urlCategory
+            : "Halılar";
+
+
+    function kategoriGoster(
+        category
+    ) {
+
+        aktifKategori =
+            category;
+
+
+        const filtrelenmisUrunler =
+            products.filter(
+                function (product) {
+
+                    return (
+                        product.category ===
+                        category
+                    );
+
+                }
+            );
+
+
+        filterButtons.forEach(
+            function (button) {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.category ===
+                    category
+                );
+
+            }
+        );
+
+
+        const title =
+            document.getElementById(
+                "catalogTitle"
+            );
+
+
+        const description =
+            document.getElementById(
+                "catalogDescription"
+            );
+
+
+        if (title) {
+
+            title.textContent =
+                category;
+        }
+
+
+        if (description) {
+
+            description.textContent =
+                filtrelenmisUrunler.length +
+                " ürün";
+        }
+
+
+        if (
+            filtrelenmisUrunler.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty-state">
+
+                    <h2>
+                        Bu kategoride henüz ürün yok
+                    </h2>
+
+                    <p>
+                        Çok yakında yeni ürünler eklenecek.
+                    </p>
 
                 </div>
 
             `;
 
+            return;
+        }
 
-            container.appendChild(
-                section
+
+        container.innerHTML =
+            filtrelenmisUrunler
+                .map(
+                    function (product) {
+
+                        return urunKartiOlustur(
+                            product,
+                            imagesMap
+                        );
+
+                    }
+                )
+                .join("");
+
+
+        /*
+         * URL'yi kategoriye göre güncelle.
+         * Sayfa yenilenmez.
+         */
+
+        const newUrl =
+            new URL(
+                window.location.href
+            );
+
+
+        newUrl.searchParams.set(
+            "category",
+            category
+        );
+
+
+        window.history.replaceState(
+            {},
+            "",
+            newUrl
+        );
+
+
+        console.log(
+            category +
+            " kategorisinde " +
+            filtrelenmisUrunler.length +
+            " ürün gösterildi."
+        );
+    }
+
+
+    filterButtons.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const category =
+                        button.dataset.category;
+
+
+                    if (
+                        KATEGORILER.includes(
+                            category
+                        )
+                    ) {
+
+                        kategoriGoster(
+                            category
+                        );
+                    }
+
+                }
             );
 
         }
     );
 
 
-    /*
-     * Hiç ürün yoksa
-     */
-
-    if (
-        container.children.length === 0
-    ) {
-
-        container.innerHTML = `
-
-            <section class="empty-products">
-
-                <div class="container">
-
-                    <h2>
-                        Koleksiyonlarımız hazırlanıyor
-                    </h2>
-
-                    <p>
-                        Çok yakında ürünlerimizi
-                        burada görebileceksiniz.
-                    </p>
-
-                </div>
-
-            </section>
-
-        `;
-    }
-}
-
-
-/* ==========================================================
-   NAVİGASYON KATEGORİLERİ
-   ========================================================== */
-
-function kategoriMenusuOlustur() {
-
-    const menu =
-        document.getElementById(
-            "categoryMenu"
-        );
-
-
-    if (!menu) {
-        return;
-    }
-
-
-    menu.innerHTML = "";
-
-
-    KATEGORILER.forEach(
-        function (category) {
-
-            const slug =
-                category
-                    .toLowerCase()
-                    .replace(
-                        /[^a-z0-9ğüşöçıİĞÜŞÖÇ]+/gi,
-                        "-"
-                    );
-
-
-            const link =
-                document.createElement(
-                    "a"
-                );
-
-
-            link.href =
-                "#kategori-" +
-                slug;
-
-
-            link.textContent =
-                category;
-
-
-            menu.appendChild(
-                link
-            );
-
-        }
+    kategoriGoster(
+        aktifKategori
     );
 }
 
@@ -585,19 +816,46 @@ function mobilMenuHazirla() {
         );
 
 
+    /*
+     * Mevcut HTML'de farklı isim
+     * kullanılmışsa alternatifleri dene.
+     */
+
+    const alternativeButton =
+        document.querySelector(
+            ".mobile-menu-button"
+        );
+
+
+    const alternativeNavigation =
+        document.querySelector(
+            ".site-nav"
+        );
+
+
+    const finalButton =
+        menuButton ||
+        alternativeButton;
+
+
+    const finalNavigation =
+        navigation ||
+        alternativeNavigation;
+
+
     if (
-        !menuButton ||
-        !navigation
+        !finalButton ||
+        !finalNavigation
     ) {
         return;
     }
 
 
-    menuButton.addEventListener(
+    finalButton.addEventListener(
         "click",
         function () {
 
-            navigation.classList.toggle(
+            finalNavigation.classList.toggle(
                 "mobile-open"
             );
 
@@ -605,7 +863,7 @@ function mobilMenuHazirla() {
     );
 
 
-    navigation
+    finalNavigation
         .querySelectorAll("a")
         .forEach(
             function (link) {
@@ -614,7 +872,7 @@ function mobilMenuHazirla() {
                     "click",
                     function () {
 
-                        navigation.classList.remove(
+                        finalNavigation.classList.remove(
                             "mobile-open"
                         );
 
@@ -627,7 +885,99 @@ function mobilMenuHazirla() {
 
 
 /* ==========================================================
-   ANA SİTEYİ BAŞLAT
+   KATEGORİ MENÜSÜ
+   ========================================================== */
+
+function kategoriMenusuOlustur() {
+
+    const menu =
+        document.getElementById(
+            "categoryMenu"
+        );
+
+
+    if (!menu) {
+        return;
+    }
+
+
+    menu.innerHTML = "";
+
+
+    KATEGORILER.forEach(
+        function (category) {
+
+            const slug =
+                kategoriSlugOlustur(
+                    category
+                );
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.href =
+                "halilar.html?category=" +
+                encodeURIComponent(
+                    category
+                );
+
+
+            link.textContent =
+                category;
+
+
+            link.dataset.slug =
+                slug;
+
+
+            menu.appendChild(
+                link
+            );
+
+        }
+    );
+}
+
+
+/* ==========================================================
+   ÜRÜN KARTLARINDAKİ DETAY LİNKLERİ
+   ========================================================== */
+
+function urunDetayBaglantilariniHazirla() {
+
+    document
+        .querySelectorAll(
+            ".product-image[data-product-id]"
+        )
+        .forEach(
+            function (element) {
+
+                element.addEventListener(
+                    "click",
+                    function (event) {
+
+                        /*
+                         * Şimdilik ürün detay sayfası
+                         * oluşturulmadığı için link davranışını
+                         * engelliyoruz.
+                         */
+
+                        event.preventDefault();
+
+                    }
+                );
+
+            }
+        );
+}
+
+
+/* ==========================================================
+   SİTEYİ BAŞLAT
    ========================================================== */
 
 async function siteyiBaslat() {
@@ -637,36 +987,64 @@ async function siteyiBaslat() {
     );
 
 
-    const productContainer =
+    const featuredContainer =
         document.getElementById(
-            "categoryProducts"
+            "featuredProducts"
+        );
+
+
+    const catalogContainer =
+        document.getElementById(
+            "catalogProducts"
         );
 
 
     try {
+
+        /*
+         * Menüleri hazırla
+         */
 
         kategoriMenusuOlustur();
 
         mobilMenuHazirla();
 
 
-        if (productContainer) {
+        /*
+         * Ana sayfadaki yükleniyor alanı
+         */
 
-            productContainer.innerHTML = `
+        if (featuredContainer) {
 
-                <div class="loading-products">
+            featuredContainer.innerHTML = `
 
-                    <div class="loading-spinner"></div>
-
-                    <p>
-                        Ürünler yükleniyor...
-                    </p>
-
+                <div class="loading-state">
+                    Ürünler yükleniyor...
                 </div>
 
             `;
         }
 
+
+        /*
+         * Katalogdaki yükleniyor alanı
+         */
+
+        if (catalogContainer) {
+
+            catalogContainer.innerHTML = `
+
+                <div class="loading-state">
+                    Ürünler yükleniyor...
+                </div>
+
+            `;
+        }
+
+
+        /*
+         * Supabase'den verileri getir
+         */
 
         const {
             products,
@@ -675,10 +1053,37 @@ async function siteyiBaslat() {
             await urunleriGetir();
 
 
-        kategorileriOlustur(
-            products,
-            imagesMap
-        );
+        /*
+         * ANA SAYFA
+         */
+
+        if (featuredContainer) {
+
+            oneCikanUrunleriOlustur(
+                products,
+                imagesMap
+            );
+        }
+
+
+        /*
+         * KATALOG SAYFASI
+         */
+
+        if (catalogContainer) {
+
+            katalogOlustur(
+                products,
+                imagesMap
+            );
+        }
+
+
+        /*
+         * Ürün kartı linkleri
+         */
+
+        urunDetayBaglantilariniHazirla();
 
 
         console.log(
@@ -694,11 +1099,31 @@ async function siteyiBaslat() {
         );
 
 
-        if (productContainer) {
+        if (featuredContainer) {
 
-            productContainer.innerHTML = `
+            featuredContainer.innerHTML = `
 
-                <div class="site-error">
+                <div class="error-state">
+
+                    <h2>
+                        Ürünler şu anda yüklenemiyor.
+                    </h2>
+
+                    <p>
+                        Lütfen daha sonra tekrar deneyin.
+                    </p>
+
+                </div>
+
+            `;
+        }
+
+
+        if (catalogContainer) {
+
+            catalogContainer.innerHTML = `
+
+                <div class="error-state">
 
                     <h2>
                         Ürünler şu anda yüklenemiyor.
