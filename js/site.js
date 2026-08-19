@@ -127,9 +127,7 @@ function resimUrlHazirla(image) {
 
         try {
 
-            const {
-                data
-            } =
+            const { data } =
                 supabaseClient
                     .storage
                     .from(STORAGE_BUCKET)
@@ -223,7 +221,7 @@ function urunKartiOlustur(
         ? `
             <img
                 src="${escapeHTML(image)}"
-                alt="${escapeHTML(product.name || "Sur Halı ürünü")}"
+                alt="${escapeHTML(product.name || "Sur Halı ürünü") }"
                 loading="lazy"
                 onerror="this.style.display='none'; this.parentElement.classList.add('no-image');"
             >
@@ -426,12 +424,19 @@ async function urunleriGetir() {
 
 
     const imagesMap = {};
+    const coversMap = {};
 
 
     (images || []).forEach(
         function (image) {
 
             if (!image.product_id) {
+                // treat as category cover if category present
+                if (image.category) {
+                    if (!coversMap[image.category]) {
+                        coversMap[image.category] = image;
+                    }
+                }
                 return;
             }
 
@@ -461,7 +466,8 @@ async function urunleriGetir() {
 
     return {
         products: aktifUrunler,
-        imagesMap: imagesMap
+        imagesMap: imagesMap,
+        coversMap: coversMap
     };
 }
 
@@ -888,7 +894,7 @@ function mobilMenuHazirla() {
    KATEGORİ MENÜSÜ
    ========================================================== */
 
-function kategoriMenusuOlustur() {
+function kategoriMenusuOlustur(coversMap) {
 
     const menu =
         document.getElementById(
@@ -933,6 +939,17 @@ function kategoriMenusuOlustur() {
             link.dataset.slug =
                 slug;
 
+
+            const cover = coversMap && coversMap[category];
+            const coverUrl = cover ? resimUrlHazirla(cover) : null;
+
+            if (coverUrl) {
+                const img = document.createElement('img');
+                img.src = coverUrl;
+                img.alt = category + ' kapak';
+                img.style = 'width:100%;height:60px;object-fit:cover;border-radius:6px;margin-bottom:6px;';
+                link.prepend(img);
+            }
 
             menu.appendChild(
                 link
@@ -1005,8 +1022,7 @@ async function siteyiBaslat() {
          * Menüleri hazırla
          */
 
-        kategoriMenusuOlustur();
-
+        // kategoriMenusuOlustur(); -> move after fetching covers
         mobilMenuHazirla();
 
 
@@ -1048,12 +1064,18 @@ async function siteyiBaslat() {
 
         const {
             products,
-            imagesMap
+            imagesMap,
+            coversMap
         } =
             await urunleriGetir();
 
 
-        /*
+        /* ==================================================
+         * KATEGORİ MENÜSÜ
+         */
+        kategoriMenusuOlustur(coversMap);
+
+        /* ==================================================
          * ANA SAYFA
          */
 
